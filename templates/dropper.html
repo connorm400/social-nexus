@@ -1,17 +1,17 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Add submission</title>
+<title>Create post</title>
 {% endblock %}
 
 {% block body %}
 <a href="/"><img src="{{ url_for('static', filename='images/back-arrow.png') }}" class="back"></a>
 <div class="box">
-<h1>Add Entry</h1>
+<h1>Create Post</h1>
 
 <form action="/dropper" method="POST">
-    <textarea name="content" id="content" rows="10" cols="30">
-Each entry is anonymous & secure
+    <textarea name="content" id="content" rows="10" cols="50" autofocus maxlength="400">
+Each post is anonymous
     </textarea> 
     <br>
     <input type="submit" value="submit">
