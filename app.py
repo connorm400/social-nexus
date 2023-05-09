@@ -33,6 +33,21 @@ def submit():
     elif request.method == 'GET':
         return render_template('dropper.html')
 
+@app.route('/recipient')
+def viewentries():
+    submissions = entry.query.order_by(entry.date_created).all()
+    return render_template('recipient.html', submissions=submissions)
+
+@app.route('/del/<int:id>')
+def delete(id):
+    entry_to_delete = entry.query.get_or_404(id)
+
+    try: #have a try statement just incase something goes wrong
+        db.session.delete(entry_to_delete)
+        db.session.commit()
+        return redirect('/')
+    except:
+        return 'issue with deleting entry in database'
 
 if __name__ == "__main__":
     with app.app_context():

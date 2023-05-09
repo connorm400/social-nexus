@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>View entries</title>
+{% endblock %}
+
+{% block body %}
+<h1>recipient mailbox</h1>
+<div class="box">
+    {% if submissions|length < 1 %}
+        <h2>There are no entries</h2>
+        <a href="/">back</a>
+    {% endif %}
+    {% for entry in submissions %}
+
+        <h2>Date Created: {{ entry.date_created.date() }}</h2>
+        <p>{{ entry.content }}</p>
+        <br>
+        <a href="/del/{{entry.id}}">Delete</a>
+        {% if submissions|length > 1 %}
+            <hr>
+        {% endif %}
+    {% endfor %}
+    
+
+</div>
+{% endblock %}
