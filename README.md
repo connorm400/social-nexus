@@ -1,6 +1,6 @@
 # Social nexus  
  
-At first this project was supposed to be like SecureDrop, but I decided to pivot to a sort of social billboard / forum web app. new name coming soon^TM
+At first this project was supposed to be like SecureDrop, but I decided to pivot to a sort of social billboard / forum web app. I will definitely remake this to at some point + probably figure out a new name for it
 
 ### Current routes
 
