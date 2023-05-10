@@ -6,7 +6,7 @@
 
 {% block body %}
 <a href="/recipient"><img src="{{ url_for('static', filename='images/back-arrow.png') }}" class="back"></a>
-<h1>post title (placeholder)</h1>
+<h1>{{ post.title }}</h1>
 <div class="box">
     <p>{{ post.content }}</p>
     <br>

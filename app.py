@@ -8,6 +8,7 @@ db = SQLAlchemy(app)
 
 class entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(150), nullable=False)
     content = db.Column(db.String(400), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.now)
     def __repr__(self):
@@ -22,7 +23,8 @@ def index():
 def submit():
     if request.method == 'POST':
         submission_content = request.form['content'] # extracting data from the form
-        new_submission = entry(content=submission_content) 
+        post_title = request.form['title']
+        new_submission = entry(content=submission_content, title=post_title) 
 
         try: 
             db.session.add(new_submission) # adding the task extracted from the form to the database and commiting to save
