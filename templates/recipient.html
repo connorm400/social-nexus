@@ -18,7 +18,7 @@
         <h2>Date Created: {{ entry.date_created.date() }}</h2>
         <p>{{ entry.content }}</p>
         <br>
-        <a href="/del/{{entry.id}}">Delete</a>
+        <p><b><a href="/del/{{entry.id}}">Delete</a> | <a href="/post/{{entry.id}}">view post</a></b></p>
         {% if submissions|length > 1 %} <!--Will only show a horizontal line if there are multiple posts to be divided-->
             <hr>
         {% endif %}

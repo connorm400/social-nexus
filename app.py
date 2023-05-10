@@ -49,6 +49,12 @@ def delete(id):
     except:
         return 'issue with deleting entry in database'
 
+@app.route('/post/<int:id>')
+def fullpagepost(id):
+    specific_post = entry.query.get_or_404(id)
+    return render_template('post.html', post=specific_post)
+
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
