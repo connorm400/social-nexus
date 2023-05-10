@@ -11,3 +11,5 @@ At first this project was supposed to be like SecureDrop, but I decided to pivot
 * **/recipient**: where to see all the posts
 
 * **/delete/_id_**: api request thingy to delete the post with the corresponding id
+
+* **/post/_id_**: fullpage for a post. Might even have comments or something someday
