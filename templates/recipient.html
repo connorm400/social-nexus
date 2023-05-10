@@ -15,7 +15,7 @@
     <!--Repeats this for each post-->
     {% for entry in submissions %}
         <h2>{{ entry.title }}</h2>
-        <h4>Date Created: {{ entry.date_created.date() }}</h4>
+        <!--<h4>Date Created: {{ entry.date_created.date() }}</h4>-->
         <p>{{ entry.content }}</p>
         <br>
         <p><b><a href="/del/{{entry.id}}">Delete</a> | <a href="/post/{{entry.id}}">view post</a></b></p>
