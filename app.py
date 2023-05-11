@@ -12,7 +12,7 @@ class entry(db.Model):
     content = db.Column(db.String(400), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.now)
     votes = db.Column(db.Integer, default=0)
-    comments = db.relationship('comment', backref="entry", lazy=True)
+    comments = db.relationship('comment', backref="entry", lazy=True, cascade='all, delete')
     def __repr__(self):
         return "<entry %r>" % self.id
 
@@ -53,7 +53,6 @@ def viewentries():
 @app.route('/del/<int:id>')
 def deleteentry(id):
     entry_to_delete = entry.query.get_or_404(id)
-
     try: #have a try statement just incase something goes wrong
         db.session.delete(entry_to_delete)
         db.session.commit()
