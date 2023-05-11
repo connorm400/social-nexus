@@ -19,7 +19,7 @@
         <p>{{ entry.content }}</p>
         <br>
         <p>votes: {{ entry.votes }} | <a href="/upvote-post/{{ entry.id }}">Vote</a></p> 
-        <p><b><a href="/del/{{entry.id}}">Delete</a> | <a href="/post/{{entry.id}}">view post</a></b></p>
+        <p><b><a href="/post/{{entry.id}}">view post</a></b></p>
         {% if submissions|length > 1 %} <!--Will only show a horizontal line if there are multiple posts to be divided-->
             <hr>
         {% endif %}
