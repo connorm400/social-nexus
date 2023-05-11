@@ -10,6 +10,7 @@
 <div class="box">
     <p>{{ post.content }}</p>
     <br>
+    <p>votes: {{ post.votes }} | <a href="/upvote-post/{{ post.id }}">Vote</a></p>
     <p><b>Date created: {{ post.date_created.date() }} | <a href="/del/{{post.id}}">Delete</a></b></p>
 </div>
 {% endblock %}

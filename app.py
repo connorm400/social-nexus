@@ -11,9 +11,19 @@ class entry(db.Model):
     title = db.Column(db.String(150), nullable=False)
     content = db.Column(db.String(400), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.now)
+    votes = db.Column(db.Integer, default=0)
+    comments = db.relationship('comment', backref="entry", lazy=True)
     def __repr__(self):
         return "<entry %r>" % self.id
 
+class comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(200), nullable=False)
+    votes = db.Column(db.Integer, default=0)
+    entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'),
+        nullable=False)
+    def __repr__(self):
+        return "<comment %r>" % self.id
 
 @app.route('/')
 def index():
@@ -50,6 +60,17 @@ def delete(id):
         return redirect('/recipient')
     except:
         return 'issue with deleting entry in database'
+
+@app.route('/upvote-post/<int:id>')
+def upvotepost(id):
+    entry_to_upvote = entry.query.get_or_404(id)
+
+    entry_to_upvote.votes += 1
+    try:
+        db.session.commit()
+        return redirect('/post/%r' % id)
+    except:
+        return 'issue with voting whoops'
 
 @app.route('/post/<int:id>')
 def fullpagepost(id):
