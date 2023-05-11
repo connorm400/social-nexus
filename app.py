@@ -61,13 +61,13 @@ def deleteentry(id):
     except:
         return 'issue with deleting entry in database'
 
-@app.route('/del/comment/<int:id>')
-def deletecomment(id):
-    comment_to_delete = comment.query.get_or_404(id)
+@app.route('/del/comment/<int:post_id>/<int:comment_id>')
+def deletecomment(post_id, comment_id):
+    comment_to_delete = comment.query.get_or_404(comment_id)
     try: #have a try statement just incase something goes wrong
         db.session.delete(comment_to_delete)
         db.session.commit()
-        return redirect('/post/%r' %id)
+        return redirect('/post/%r' %post_id)
     except:
         return 'issue with deleting comment in database'
 
@@ -82,6 +82,18 @@ def upvotepost(id):
     except:
         return 'issue with voting whoops'
 
+@app.route('/upvote-comment/<int:post_id>/<int:comment_id>')
+def upvotecomment(post_id, comment_id):
+
+    comment_to_upvote = comment.query.get_or_404(comment_id)
+
+    comment_to_upvote.votes += 1
+    try:
+        db.session.commit()
+        return redirect('/post/%r' % post_id)
+    except:
+        return 'issue with voting whoops'
+    
 @app.route('/post/<int:id>', methods=['POST', 'GET'])
 def fullpagepost(id):
     if request.method == 'GET':

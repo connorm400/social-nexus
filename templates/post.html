@@ -29,8 +29,8 @@ Make a comment!
         
         <p>{{ comment.content }}</p>
         <br>
-        <p>votes: {{ comment.votes }}</p> 
-        <p><a href="/del/comment/{{comment.id}}">delete comment</a></p>
+        <p>votes: {{ comment.votes }} | <a href="/upvote-comment/{{ post.id }}/{{ comment.id }}">Vote</a></p> 
+        <p><a href="/del/comment/{{ post.id }}/{{comment.id}}">delete comment</a></p>
         
     {% endfor %}
 </div>
