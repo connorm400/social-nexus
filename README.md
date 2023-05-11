@@ -17,4 +17,4 @@ At first this project was supposed to be like SecureDrop, but I decided to pivot
 * **/upvote-post/_id_**: increments post's vote cell by 1
 
 * **/post/_id_**: GET is fullpage for a post. 
- * POST is for submitting a comment
+     * POST is for submitting a comment
