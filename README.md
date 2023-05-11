@@ -12,4 +12,9 @@ At first this project was supposed to be like SecureDrop, but I decided to pivot
 
 * **/delete/_id_**: api request thingy to delete the post with the corresponding id
 
-* **/post/_id_**: fullpage for a post. Might even have comments or something someday
+* **/delete/comment/_id_**: delete comment with that id
+
+* **/upvote-post/_id_**: increments post's vote cell by 1
+
+* **/post/_id_**: GET is fullpage for a post. 
+ * POST is for submitting a comment

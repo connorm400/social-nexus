@@ -51,7 +51,7 @@ def viewentries():
     return render_template('recipient.html', submissions=submissions)
 
 @app.route('/del/<int:id>')
-def delete(id):
+def deleteentry(id):
     entry_to_delete = entry.query.get_or_404(id)
 
     try: #have a try statement just incase something goes wrong
@@ -60,6 +60,16 @@ def delete(id):
         return redirect('/recipient')
     except:
         return 'issue with deleting entry in database'
+
+@app.route('/del/comment/<int:id>')
+def deletecomment(id):
+    comment_to_delete = comment.query.get_or_404(id)
+    try: #have a try statement just incase something goes wrong
+        db.session.delete(comment_to_delete)
+        db.session.commit()
+        return redirect('/post/%r' %id)
+    except:
+        return 'issue with deleting comment in database'
 
 @app.route('/upvote-post/<int:id>')
 def upvotepost(id):
@@ -72,11 +82,24 @@ def upvotepost(id):
     except:
         return 'issue with voting whoops'
 
-@app.route('/post/<int:id>')
+@app.route('/post/<int:id>', methods=['POST', 'GET'])
 def fullpagepost(id):
-    specific_post = entry.query.get_or_404(id)
-    return render_template('post.html', post=specific_post)
+    if request.method == 'GET':
+        comments = comment.query.filter_by(entry_id=id).all()
+        specific_post = entry.query.get_or_404(id)
+        return render_template('post.html', post=specific_post, comments=comments)
+    
+    
+    elif request.method == 'POST': # for making comments
+        comment_content = request.form['content']
+        new_comment = comment(content=comment_content, entry_id=id)
 
+        try:
+            db.session.add(new_comment)
+            db.session.commit()
+            return redirect('/post/%r' %id)
+        except:
+            return "issue with making comment"
 
 if __name__ == "__main__":
     with app.app_context():

@@ -12,5 +12,26 @@
     <br>
     <p>votes: {{ post.votes }} | <a href="/upvote-post/{{ post.id }}">Vote</a></p>
     <p><b>Date created: {{ post.date_created.date() }} | <a href="/del/{{post.id}}">Delete</a></b></p>
+
+    <form action="/post/{{ post.id }}" method="POST">
+        <textarea name="content" id="content" rows="10" cols="50" autofocus maxlength="400">
+Make a comment!
+        </textarea> 
+        <br><br>
+        <input type="submit" value="submit">
+    </form>
+    <h2>Comments:</h2>
+    {% if comments|length < 1 %}
+        <p>There are no comments.</p>
+    {% endif %}
+    {% for comment in comments %}
+        <hr>
+        
+        <p>{{ comment.content }}</p>
+        <br>
+        <p>votes: {{ comment.votes }}</p> 
+        <p><a href="/del/comment/{{comment.id}}">delete comment</a></p>
+        
+    {% endfor %}
 </div>
 {% endblock %}
