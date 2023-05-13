@@ -7,7 +7,7 @@
 {% block body %}
 <a href="/recipient"><img src="{{ url_for('static', filename='images/back-arrow.png') }}" class="back"></a>
 <h1>{{ post.title }}</h1>
-<h2>Author: {{ post.author }}</h2>
+<h2>Author: {{ post.author_name }}</h2>
 <div class="box">
     <p>{{ post.content }}</p>
     <br>

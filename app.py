@@ -27,6 +27,7 @@ class entry(db.Model):
     date_created = db.Column(db.DateTime, default=datetime.now)
     votes = db.Column(db.Integer, default=0)
     author = db.Column(db.Integer, nullable=False)
+    author_name = db.Column(db.String(20), nullable=False)
     comments = db.relationship('comment', backref="entry", lazy=True, cascade='all, delete')
     def __repr__(self):
         return "<entry %r>" % self.id
@@ -36,6 +37,7 @@ class comment(db.Model):
     content = db.Column(db.String(200), nullable=False)
     votes = db.Column(db.Integer, default=0)
     author = db.Column(db.Integer, nullable=False)
+    author_name = db.Column(db.String(20), nullable=False) # this is a terrible solution to a problem I have but whatever
     entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'),
         nullable=False)
     def __repr__(self):
@@ -79,7 +81,8 @@ def submit():
         submission_content = request.form['content'] # extracting data from the form
         post_title = request.form['title']
         author = current_user.id
-        new_submission = entry(content=submission_content, title=post_title, author=author) 
+        author_name = current_user.name
+        new_submission = entry(content=submission_content, title=post_title, author=author, author_name=author_name) 
 
         try: 
             db.session.add(new_submission) # adding the task extracted from the form to the database and commiting to save
@@ -161,7 +164,8 @@ def fullpagepost(id):
 def commentPage(id):
     comment_content = request.form['content']
     author = current_user.id
-    new_comment = comment(content=comment_content, entry_id=id, author=author)
+    author_name = current_user.name
+    new_comment = comment(content=comment_content, entry_id=id, author=author, author_name=author_name)
     
     try:
         db.session.add(new_comment)
