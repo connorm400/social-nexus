@@ -13,7 +13,7 @@
     <p>votes: {{ post.votes }} | <a href="/upvote-post/{{ post.id }}">Vote</a></p>
     <p><b>Date created: {{ post.date_created.date() }} | <a href="/del/{{ post.id }}">Delete</a></b></p>
 
-    <form action="/post/{{ post.id }}" method="POST">
+    <form action="/comment/{{ post.id }}" method="POST">
         <textarea name="content" id="content" rows="10" cols="50" autofocus maxlength="400">
 Make a comment!
         </textarea> 
@@ -33,5 +33,19 @@ Make a comment!
         <p><a href="/del/comment/{{ post.id }}/{{comment.id}}">delete comment</a></p>
         
     {% endfor %}
+</div>
+<div class="login-bar">
+    <a href="/login">Login</a> / <a href="/logout">Logout</a>
+</div>
+<div class="messages">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {%endwith %}
 </div>
 {% endblock %}

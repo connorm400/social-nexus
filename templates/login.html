@@ -7,11 +7,11 @@
 {% block body %}
 <a href="/"><img src="{{ url_for('static', filename='images/back-arrow.png') }}" class="back"></a>
 <div class="box">
-
-    <form action="/login" method="POST">
-        <input type="text" name="username" id="username" placeholder="username"><br>
-        <input type="password" name="password" id="password"><br>
-        <input type="submit" value="submit">
+    <h1>Login</h1>
+    <form action="/login" method="POST" class="login">
+        <input type="text" name="username" id="username" placeholder="username" class="login"><br><br>
+        <input type="password" name="password" id="password" class="login"><br><br>
+        <input type="submit" value="submit" class="login">
     </form>
 </div>
 {% endblock %}

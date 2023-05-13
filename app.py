@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request
+from flask import Flask, render_template, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, logout_user, login_user, UserMixin
 from datetime import datetime
@@ -64,8 +64,8 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return "succesfully logged out"
-
+    flash ("succesfully logged out")
+    return redirect('/')
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -93,6 +93,7 @@ def viewentries():
     return render_template('recipient.html', submissions=submissions)
 
 @app.route('/del/<int:id>')
+@login_required
 def deleteentry(id):
     entry_to_delete = entry.query.get_or_404(id)
     try: #have a try statement just incase something goes wrong
@@ -103,6 +104,7 @@ def deleteentry(id):
         return 'issue with deleting entry in database'
 
 @app.route('/del/comment/<int:post_id>/<int:comment_id>')
+@login_required
 def deletecomment(post_id, comment_id):
     comment_to_delete = comment.query.get_or_404(comment_id)
     try: #have a try statement just incase something goes wrong
@@ -113,6 +115,7 @@ def deletecomment(post_id, comment_id):
         return 'issue with deleting comment in database'
 
 @app.route('/upvote-post/<int:id>')
+@login_required
 def upvotepost(id):
     entry_to_upvote = entry.query.get_or_404(id)
 
@@ -137,22 +140,23 @@ def upvotecomment(post_id, comment_id):
     
 @app.route('/post/<int:id>', methods=['POST', 'GET'])
 def fullpagepost(id):
-    if request.method == 'GET':
-        comments = comment.query.filter_by(entry_id=id).all()
-        specific_post = entry.query.get_or_404(id)
-        return render_template('post.html', post=specific_post, comments=comments)
+    comments = comment.query.filter_by(entry_id=id).all()
+    specific_post = entry.query.get_or_404(id)
+    return render_template('post.html', post=specific_post, comments=comments)
     
     
-    elif request.method == 'POST': # for making comments
-        comment_content = request.form['content']
-        new_comment = comment(content=comment_content, entry_id=id)
+@app.route('/comment/<int:id>', methods=['POST'])
+@login_required
+def commentPage(id):
+    comment_content = request.form['content']
+    new_comment = comment(content=comment_content, entry_id=id)
 
-        try:
-            db.session.add(new_comment)
-            db.session.commit()
-            return redirect('/post/%r' %id)
-        except:
-            return "issue with making comment"
+    try:
+        db.session.add(new_comment)
+        db.session.commit()
+        return redirect('/post/%r' %id)
+    except:
+        return "issue with making comment"
 
 if __name__ == "__main__":
     with app.app_context():

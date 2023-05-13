@@ -10,12 +10,23 @@
 <h1>Create Post</h1>
 
 <form action="/dropper" method="POST">
-    <input type="text" name="title" id="titleinput" placeholder="title"><br>
+    <input type="text" name="title" id="titleinput" placeholder="title"><br><br>
     <textarea name="content" id="content" rows="10" cols="50" autofocus maxlength="400">
 Each post is anonymous (currently)
     </textarea> 
     <br><br>
     <input type="submit" value="submit">
 </form>
+</div>
+<div class="messages">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class=flashes>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {%endwith %}
 </div>
 {% endblock %}
