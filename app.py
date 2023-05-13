@@ -111,7 +111,7 @@ def deleteentry(id):
             return 'issue with deleting entry in database'
     else:
         flash ("need to be the author to delete this post")
-        return redirect('/')
+        return redirect('/post/%r' %id)
 
 @app.route('/del/comment/<int:post_id>/<int:comment_id>')
 @login_required
