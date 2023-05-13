@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_required, logout_user, login_user, UserMixin
+from flask_login import LoginManager, login_required, logout_user, login_user, UserMixin, current_user
 from datetime import datetime
 
 app = Flask(__name__)
@@ -26,6 +26,7 @@ class entry(db.Model):
     content = db.Column(db.String(400), nullable=False)
     date_created = db.Column(db.DateTime, default=datetime.now)
     votes = db.Column(db.Integer, default=0)
+    author = db.Column(db.Integer, nullable=False)
     comments = db.relationship('comment', backref="entry", lazy=True, cascade='all, delete')
     def __repr__(self):
         return "<entry %r>" % self.id
@@ -34,6 +35,7 @@ class comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
     votes = db.Column(db.Integer, default=0)
+    author = db.Column(db.Integer, nullable=False)
     entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'),
         nullable=False)
     def __repr__(self):
@@ -76,7 +78,8 @@ def submit():
     if request.method == 'POST':
         submission_content = request.form['content'] # extracting data from the form
         post_title = request.form['title']
-        new_submission = entry(content=submission_content, title=post_title) 
+        author = current_user.id
+        new_submission = entry(content=submission_content, title=post_title, author=author) 
 
         try: 
             db.session.add(new_submission) # adding the task extracted from the form to the database and commiting to save
@@ -96,24 +99,32 @@ def viewentries():
 @login_required
 def deleteentry(id):
     entry_to_delete = entry.query.get_or_404(id)
-    try: #have a try statement just incase something goes wrong
-        db.session.delete(entry_to_delete)
-        db.session.commit()
-        return redirect('/recipient')
-    except:
-        return 'issue with deleting entry in database'
+    if entry_to_delete.author == current_user.id:
+        try: #have a try statement just incase something goes wrong
+            db.session.delete(entry_to_delete)
+            db.session.commit()
+            return redirect('/recipient')
+        except:
+            return 'issue with deleting entry in database'
+    else:
+        flash ("need to be the author to delete this post")
+        return redirect('/')
 
 @app.route('/del/comment/<int:post_id>/<int:comment_id>')
 @login_required
 def deletecomment(post_id, comment_id):
     comment_to_delete = comment.query.get_or_404(comment_id)
-    try: #have a try statement just incase something goes wrong
-        db.session.delete(comment_to_delete)
-        db.session.commit()
+    if comment_to_delete.author == current_user.id:
+        try: #have a try statement just incase something goes wrong
+            db.session.delete(comment_to_delete)
+            db.session.commit()
+            return redirect('/post/%r' %post_id)
+        except:
+            return 'issue with deleting comment in database'
+    else:
+        flash ("need to be the author to delete this comment")
         return redirect('/post/%r' %post_id)
-    except:
-        return 'issue with deleting comment in database'
-
+    
 @app.route('/upvote-post/<int:id>')
 @login_required
 def upvotepost(id):
@@ -149,8 +160,9 @@ def fullpagepost(id):
 @login_required
 def commentPage(id):
     comment_content = request.form['content']
-    new_comment = comment(content=comment_content, entry_id=id)
-
+    author = current_user.id
+    new_comment = comment(content=comment_content, entry_id=id, author=author)
+    
     try:
         db.session.add(new_comment)
         db.session.commit()
