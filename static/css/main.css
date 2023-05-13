@@ -35,3 +35,13 @@ img.back {
 #titleinput{
     width: 350px;
 }
+.login-bar {
+    background-color: aliceblue;
+    margin: 2%;
+    padding: 3%;
+    width: 10%;
+    border-radius: 25px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}

@@ -1,31 +1,21 @@
 from flask import Flask, render_template, redirect, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager
+from flask_login import LoginManager, login_required, logout_user, login_user, UserMixin
 from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = 'fe77d95461c40eaf32e34bdd8af507729f7225046312d9fcc190c3a1e2c409e6'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///submissions.db'
 db = SQLAlchemy(app)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.login_view = 'login'
 
-class user(db.Model):   
+class User(UserMixin, db.Model):   
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(20), nullable=False)
-    
-    def is_authenticated(self):
-        return True
-
-    def is_active(self):   
-        return True           
-
-    def is_anonymous(self):
-        return False          
-
-    def get_id(self):         
-        return str(self.id)
     
     def __repr__(self):
         return "<user %r>" %self.id
@@ -51,14 +41,37 @@ class comment(db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return user.objects(id=user_id).first()
+    return User.query.get(int(user_id))
 
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    if request.method == 'POST' :
+        username = request.form['username']
+        password = request.form['password']
+
+        user_to_login = User.query.filter_by(name=username).first()
+
+        if user_to_login.password == password:
+            login_user(user_to_login)
+            return redirect('/')
+        else:
+            return 'Invalid username or password.', 'error'
+        
+    elif request.method == 'GET':
+        return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return "succesfully logged out"
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/dropper', methods=['POST', 'GET'])
+@login_required
 def submit():
     if request.method == 'POST':
         submission_content = request.form['content'] # extracting data from the form
