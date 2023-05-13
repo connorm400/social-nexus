@@ -1,10 +1,34 @@
 from flask import Flask, render_template, redirect, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///submissions.db'
 db = SQLAlchemy(app)
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+class user(db.Model):   
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False)
+    password = db.Column(db.String(20), nullable=False)
+    
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):   
+        return True           
+
+    def is_anonymous(self):
+        return False          
+
+    def get_id(self):         
+        return str(self.id)
+    
+    def __repr__(self):
+        return "<user %r>" %self.id
 
 class entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,6 +48,11 @@ class comment(db.Model):
         nullable=False)
     def __repr__(self):
         return "<comment %r>" % self.id
+
+@login_manager.user_loader
+def load_user(user_id):
+    return user.objects(id=user_id).first()
+
 
 @app.route('/')
 def index():
