@@ -62,9 +62,16 @@ def login():
         
         if request.form.get('remember-me') != True:
             remember_me = False
-
-        user_to_login = User.query.filter_by(name=username).first()
-
+        try:
+            user_to_login = User.query.filter_by(name=username).first()
+            if bcrypt.check_password_hash(user_to_login.pw_hash, candidate):
+                login_user(user_to_login, remember=remember_me)
+                return redirect('/')
+            else:
+                return 'Invalid username or password.', 'error'
+        except:
+            flash ('user doesnt exist')
+            return redirect('/')
         #if user_to_login.password == password:
         if bcrypt.check_password_hash(user_to_login.pw_hash, candidate):
             login_user(user_to_login, remember=remember_me)
