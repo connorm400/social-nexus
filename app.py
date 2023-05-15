@@ -175,7 +175,7 @@ def deleteentry(id):
         try: #have a try statement just incase something goes wrong
             db.session.delete(entry_to_delete)
             db.session.commit()
-            return redirect('/recipient')
+            return redirect('/')
         except:
             return 'issue with deleting entry in database'
     else:
