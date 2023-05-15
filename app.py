@@ -115,6 +115,7 @@ def signup():
             try:
                 db.session.add(new_user)
                 db.session.commit()
+                login_user(new_user, remember=True)
                 return redirect('/')
             except:
                 return 'error with making new user in database'
