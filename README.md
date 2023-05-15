@@ -2,28 +2,20 @@
  
 At first this project was supposed to be like SecureDrop, but I decided to pivot to a sort of social billboard / forum web app. I will definitely remake this to at some point + probably figure out a new name for it
 
-### Current routes (out of date)
+### Current routes 
 
-* **/**: the index. Has a link to the dropper and recipient pages and login/signin page
+* **/**: the index. Show posts and has a link to **/dropper**
 
-* **/login**: Login page. needs a user name and a password candidate
+* **/dropper**: Where to submit posts
 
-* **/signup**: make a new user account
+* **/post/_id_**: fullpage post. Shows comments and more options and such
 
-* **/logout**: will logout current user. requires login
+* **/comment/_post\_id_**: creates a comment on post. POST method required. redirects to the post after
 
-* **/dropper**: Where to make posts. Basically a form with a textbox right now. requires login
+* **/del/_id_**: delete post with corresponding post id. Requires login and current user must be either the author or admin. redirects to /
 
-* **/recipient**: where to see all the posts
+* **/del/comment/_post\_id_/_comment\_id_**: delete comment with corresponding comment id. Requires login and current user must be either the author or admin. redirects to /post/*post_id*. 
 
-* **/delete/_id_**: api request thingy to delete the post with the corresponding id. Requires login and will only work if current_user is the author of the post
+* **/upvote-post/_id_**: Upvote post with corresponding id. requires login + current user hasnt already liked the post. redirects to post
 
-* **/delete/comment/_post id_/_comment id_**: delete comment with that id. Redirects to /post/_post id_ . Requires login and will only work if current_user is the author of the post
-
-* **/upvote-post/_post id_/**: upvote post with _post id_
-
-* **/upvote-comment/_post id_/_comment id_**: increments comment vote cell by 1
-
-* **/post/_id_**: returns full page post with comments and extra options
-
-* **/comment/_post\_id_**: POST a comment on post with _post\_id_
+* **/upvote-comment/_post\_id_/_comment\_id_**: upvote comment with comment_id. requires login + current user hasnt already liked the comment. redirects to post
