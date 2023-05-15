@@ -54,7 +54,8 @@ img.back {
 }
 .postbox:hover {
     animation-name: hover;
-    animation-duration: 1s;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
 }
 a {
     color:white;
