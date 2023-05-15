@@ -11,7 +11,7 @@
 <div class="box">
     <p>{{ post.content }}</p>
     <br>
-    <p>votes: {{ post.votes }} | <a href="/upvote-post/{{ post.id }}">Vote</a></p>
+    <p>likes: {{ post.votes }} | <a href="/upvote-post/{{ post.id }}">like</a></p>
     <p><b>Date created: {{ post.date_created.date() }} | <a href="/del/{{ post.id }}">Delete</a></b></p>
 
     <form action="/comment/{{ post.id }}" method="POST">
