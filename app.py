@@ -18,7 +18,13 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+post_likes = db.Table('post_likes',
+                         db.Column('post_id', db.Integer, db.ForeignKey('entry.id'), primary_key=True),
+                         db.Column('user_id', db.Integer, db.ForeignKey('User.id'), primary_key=True)
+                         )
+
 class User(UserMixin, db.Model):   
+    __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     #password = db.Column(db.String(20), nullable=False)
@@ -34,11 +40,13 @@ class entry(db.Model):
     image = db.Column(db.String(500), nullable=True)
     date_created = db.Column(db.DateTime, default=datetime.now)
     votes = db.Column(db.Integer, default=0)
+    voters = db.relationship('User', secondary=post_likes, backref=db.backref('liked_posts', lazy='dynamic'))
     author = db.Column(db.Integer, nullable=False)
     author_name = db.Column(db.String(20), nullable=False)
     comments = db.relationship('comment', backref="entry", lazy=True, cascade='all, delete')
     def __repr__(self):
         return "<entry %r>" % self.id
+
 
 class comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -59,6 +67,7 @@ def load_user(user_id):
 def login():
     if request.method == 'POST' :
         username = request.form['username']
+        username = username.lower()
         pw_candidate = request.form['password']
         
         if request.form.get('remember-me') != True:
@@ -81,6 +90,7 @@ def login():
 def signup():
     if request.method == 'POST':
         username = request.form['username']
+        username = username.lower()
         password = request.form['password']
 
         # check if a user already has that name
@@ -175,13 +185,16 @@ def deletecomment(post_id, comment_id):
 @login_required
 def upvotepost(id):
     entry_to_upvote = entry.query.get_or_404(id)
-
-    entry_to_upvote.votes += 1
-    try:
-        db.session.commit()
-        return redirect('/post/%r' % id)
-    except:
-        return 'issue with voting whoops'
+    if current_user in entry_to_upvote.voters:
+        flash ('You already liked this post')
+    else:
+        entry_to_upvote.votes += 1
+        entry_to_upvote.voters.append(current_user)
+        try:
+            db.session.commit()
+            return redirect('/post/%r' % id)
+        except:
+            return 'issue with voting whoops'
 
 @app.route('/upvote-comment/<int:post_id>/<int:comment_id>')
 def upvotecomment(post_id, comment_id):
