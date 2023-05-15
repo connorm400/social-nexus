@@ -19,6 +19,7 @@
             <h3>Author: {{ entry.author_name }}</h3>
             <!--<h4>Date Created: {{ entry.date_created.date() }}</h4>-->
             <p>{{ entry.content }}</p>
+            <img src='{{ entry.image }}' class="post-image">
             <br>
             <p>likes: {{ entry.votes }} | <a href="/upvote-post/{{ entry.id }}" class="post-link">like</a></p> 
             <p><b><a href="/post/{{entry.id}}" class="post-link">view post</a></b></p>
