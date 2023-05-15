@@ -52,11 +52,14 @@ def login():
     if request.method == 'POST' :
         username = request.form['username']
         password = request.form['password']
+        
+        if request.form.get('remember-me') != True:
+            remember_me = False
 
         user_to_login = User.query.filter_by(name=username).first()
 
         if user_to_login.password == password:
-            login_user(user_to_login)
+            login_user(user_to_login, remember=remember_me)
             return redirect('/')
         else:
             return 'Invalid username or password.', 'error'
