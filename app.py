@@ -136,7 +136,10 @@ def submit():
 @app.route('/recipient')
 def viewentries():
     submissions = entry.query.order_by(entry.date_created).all()
-    return render_template('recipient.html', submissions=submissions, logged_in=current_user.is_authenticated, name=current_user.name)
+    if current_user.is_authenticated:
+        return render_template('recipient.html', submissions=submissions, logged_in=current_user.is_authenticated, name=current_user.name)
+    else:
+        return render_template('recipient.html', submissions=submissions, logged_in=current_user.is_authenticated)
 
 @app.route('/del/<int:id>')
 @login_required
@@ -196,7 +199,10 @@ def upvotecomment(post_id, comment_id):
 def fullpagepost(id):
     comments = comment.query.filter_by(entry_id=id).all()
     specific_post = entry.query.get_or_404(id)
-    return render_template('post.html', post=specific_post, comments=comments, logged_in=current_user.is_authenticated, name=current_user.name)
+    if current_user.is_authenticated:
+        return render_template('post.html', post=specific_post, comments=comments, logged_in=current_user.is_authenticated, name=current_user.name)
+    else:
+        return render_template('post.html', post=specific_post, comments=comments, logged_in=current_user.is_authenticated)
     
     
 @app.route('/comment/<int:id>', methods=['POST'])
