@@ -184,17 +184,21 @@ def deletecomment(post_id, comment_id):
 @app.route('/upvote-post/<int:id>')
 @login_required
 def upvotepost(id):
-    entry_to_upvote = entry.query.get_or_404(id)
-    if current_user in entry_to_upvote.voters:
-        flash ('You already liked this post')
-    else:
-        entry_to_upvote.votes += 1
-        entry_to_upvote.voters.append(current_user)
-        try:
-            db.session.commit()
-            return redirect('/post/%r' % id)
-        except:
-            return 'issue with voting whoops'
+    try:
+        entry_to_upvote = entry.query.get_or_404(id)
+        if current_user in entry_to_upvote.voters:
+            flash ('You already liked this post')
+            return redirect('/post/%r' %id)
+        else:
+            entry_to_upvote.votes += 1
+            entry_to_upvote.voters.append(current_user)
+            try:
+                db.session.commit()
+                return redirect('/post/%r' % id)
+            except:
+                return 'issue with voting whoops'
+    except:
+        return 'issue with upvoting post'
 
 @app.route('/upvote-comment/<int:post_id>/<int:comment_id>')
 def upvotecomment(post_id, comment_id):
