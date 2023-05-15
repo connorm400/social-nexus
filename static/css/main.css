@@ -32,9 +32,7 @@ img.back {
     width: 70px;
     top: 20px;
     left: 20px;
-    background-color: rgb(54,57,62);
     padding:10px;
-    border-radius: 25px;
 }
 .postbox {
     background-color: rgb(54,57,62);
@@ -45,6 +43,18 @@ img.back {
     padding: 4%;
     color:white;
     margin-bottom: 20px;
+}
+@keyframes hover {
+    from {
+        background-color: rgb(54,57,62);
+    }
+    to {
+        background-color: rgb(36, 39, 44); 
+    }
+}
+.postbox:hover {
+    animation-name: hover;
+    animation-duration: 1s;
 }
 a {
     color:white;
