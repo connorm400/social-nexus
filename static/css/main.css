@@ -90,6 +90,7 @@ input[type=password] {
     background-color: rgb(54,57,62);
     border: none;
     border-radius: 25px;
+    color: white;
 }
 input[type=submit]{
     background-color: rgb(54,57,62);

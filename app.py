@@ -21,7 +21,7 @@ login_manager.login_view = 'login'
 class User(UserMixin, db.Model):   
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
-    password = db.Column(db.String(20), nullable=False)
+    #password = db.Column(db.String(20), nullable=False)
     pw_hash = db.Column(db.String(400), nullable=False)
     
     def __repr__(self):
@@ -88,7 +88,7 @@ def signup():
             return redirect('/signup')
         else:
             pw_hash = bcrypt.generate_password_hash(password)
-            new_user = User(name=username, password=password, pw_hash=pw_hash)
+            new_user = User(name=username, pw_hash=pw_hash)
             try:
                 db.session.add(new_user)
                 db.session.commit()
