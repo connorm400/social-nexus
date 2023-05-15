@@ -14,16 +14,18 @@
     {% endif %}
     <!--Repeats this for each post-->
     {% for entry in submissions %}
-        <h2>{{ entry.title }}</h2>
-        <h3>Author: {{ entry.author_name }}</h3>
-        <!--<h4>Date Created: {{ entry.date_created.date() }}</h4>-->
-        <p>{{ entry.content }}</p>
-        <br>
-        <p>votes: {{ entry.votes }} | <a href="/upvote-post/{{ entry.id }}">Vote</a></p> 
-        <p><b><a href="/post/{{entry.id}}">view post</a></b></p>
-        {% if submissions|length > 1 %} <!--Will only show a horizontal line if there are multiple posts to be divided-->
-            <hr>
-        {% endif %}
+        <div class="postbox">
+            <h2>{{ entry.title }}</h2>
+            <h3>Author: {{ entry.author_name }}</h3>
+            <!--<h4>Date Created: {{ entry.date_created.date() }}</h4>-->
+            <p>{{ entry.content }}</p>
+            <br>
+            <p>votes: {{ entry.votes }} | <a href="/upvote-post/{{ entry.id }}" class="post-link">Vote</a></p> 
+            <p><b><a href="/post/{{entry.id}}" class="post-link">view post</a></b></p>
+            {% if submissions|length > 1 %} <!--Will only show a horizontal line if there are multiple posts to be divided-->
+                <hr>
+            {% endif %}
+        </div>
     {% endfor %}
 </div>
 {% if logged_in %}
