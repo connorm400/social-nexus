@@ -37,7 +37,7 @@ Make a comment!
 </div>
 {% if logged_in %}
     <div class="login-bar">
-        <a href="/logout">Logout</a>
+        {{ name }} | <a href="/logout">Logout</a>
     </div>
 {% else %}
     <div class="login-bar">
