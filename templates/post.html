@@ -11,6 +11,7 @@
 <div class="box">
     <p>{{ post.content }}</p>
     <br>
+    <img src='{{ post.image }}' class="box">
     <p>likes: {{ post.votes }} | <a href="/upvote-post/{{ post.id }}">like</a></p>
     <p><b>Date created: {{ post.date_created.date() }} | <a href="/del/{{ post.id }}">Delete</a></b></p>
 

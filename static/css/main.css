@@ -27,12 +27,16 @@ body {
     border-radius: 25px;
     padding: 4%;
 }
+img.box {
+    width: 40%;
+    height: auto;
+}
 img.back {
     position:absolute;
     width: 70px;
     top: 20px;
     left: 20px;
-    padding:10px;
+    
 }
 .postbox {
     background-color: rgb(54,57,62);

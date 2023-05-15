@@ -31,6 +31,7 @@ class entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(150), nullable=False)
     content = db.Column(db.String(400), nullable=False)
+    image = db.Column(db.String(500), nullable=True)
     date_created = db.Column(db.DateTime, default=datetime.now)
     votes = db.Column(db.Integer, default=0)
     author = db.Column(db.Integer, nullable=False)
@@ -118,9 +119,10 @@ def submit():
     if request.method == 'POST':
         submission_content = request.form['content'] # extracting data from the form
         post_title = request.form['title']
+        image = request.form['image']
         author = current_user.id
         author_name = current_user.name
-        new_submission = entry(content=submission_content, title=post_title, author=author, author_name=author_name) 
+        new_submission = entry(content=submission_content, title=post_title, author=author, author_name=author_name, image=image) 
 
         try: 
             db.session.add(new_submission) # adding the task extracted from the form to the database and commiting to save
