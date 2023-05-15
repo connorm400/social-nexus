@@ -23,6 +23,11 @@ post_likes = db.Table('post_likes',
                          db.Column('user_id', db.Integer, db.ForeignKey('User.id'), primary_key=True)
                          )
 
+comment_likes = db.Table('comment_likes',
+                         db.Column('comment_id', db.Integer, db.ForeignKey('comment.id'), primary_key=True),
+                         db.Column('user_id', db.Integer, db.ForeignKey('User.id'), primary_key=True)
+                         )
+
 class User(UserMixin, db.Model):   
     __tablename__ = 'User'
     id = db.Column(db.Integer, primary_key=True)
@@ -52,6 +57,7 @@ class comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
     votes = db.Column(db.Integer, default=0)
+    voters = db.relationship('User', secondary=post_likes, backref=db.backref('liked_comments', lazy='dynamic'))
     author = db.Column(db.Integer, nullable=False)
     author_name = db.Column(db.String(20), nullable=False) # this is a terrible solution to a problem I have but whatever
     entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'),
@@ -204,13 +210,17 @@ def upvotepost(id):
 def upvotecomment(post_id, comment_id):
 
     comment_to_upvote = comment.query.get_or_404(comment_id)
-
-    comment_to_upvote.votes += 1
-    try:
-        db.session.commit()
+    if current_user in comment_to_upvote.voters:
+        flash ('You already liked this post')
         return redirect('/post/%r' % post_id)
-    except:
-        return 'issue with voting whoops'
+    else:
+        comment_to_upvote.votes += 1
+        comment_to_upvote.voters.append(current_user)
+        try:
+            db.session.commit()
+            return redirect('/post/%r' % post_id)
+        except:
+            return 'issue with voting whoops'
     
 @app.route('/post/<int:id>', methods=['POST', 'GET'])
 def fullpagepost(id):
