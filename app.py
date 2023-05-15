@@ -63,6 +63,28 @@ def login():
         
     elif request.method == 'GET':
         return render_template('login.html')
+    
+@app.route('/signup', methods=['POST', 'GET'])
+def signup():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        # check if a user already has that name
+        if User.query.filter_by(name=username).first():
+            flash ('Someone already has that username sorry')
+            return redirect('/signup')
+        else:
+            new_user = User(name=username, password=password)
+            try:
+                db.session.add(new_user)
+                db.session.commit()
+                return redirect('/')
+            except:
+                return 'error with making new user in database'
+    elif request.method == 'GET':
+        return render_template('signup.html')
+    
 
 @app.route('/logout')
 @login_required
