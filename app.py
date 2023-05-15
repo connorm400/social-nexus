@@ -145,7 +145,7 @@ def submit():
 
 @app.route('/recipient')
 def viewentries():
-    submissions = entry.query.order_by(entry.date_created).all()
+    submissions = entry.query.order_by(entry.votes.desc()).all()
     if current_user.is_authenticated:
         return render_template('recipient.html', submissions=submissions, logged_in=current_user.is_authenticated, name=current_user.name)
     else:
@@ -214,7 +214,8 @@ def upvotecomment(post_id, comment_id):
     
 @app.route('/post/<int:id>', methods=['POST', 'GET'])
 def fullpagepost(id):
-    comments = comment.query.filter_by(entry_id=id).all()
+    comments = comment.query.filter_by(entry_id=id).order_by(comment.votes.desc()).all()
+    
     specific_post = entry.query.get_or_404(id)
     if current_user.is_authenticated:
         return render_template('post.html', post=specific_post, comments=comments, logged_in=current_user.is_authenticated, name=current_user.name)
