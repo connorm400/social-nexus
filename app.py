@@ -45,7 +45,10 @@ class entry(db.Model):
     image = db.Column(db.String(500), nullable=True)
     date_created = db.Column(db.DateTime, default=datetime.now)
     votes = db.Column(db.Integer, default=0)
-    voters = db.relationship('User', secondary=post_likes, backref=db.backref('liked_posts', lazy='dynamic'))
+    voters = db.relationship('User', secondary=post_likes, backref=db.backref('post_likes', lazy='dynamic'), 
+                             primaryjoin=(post_likes.c.post_id == id), 
+                             secondaryjoin=(post_likes.c.user_id == User.id)
+    )
     author = db.Column(db.Integer, nullable=False)
     author_name = db.Column(db.String(20), nullable=False)
     comments = db.relationship('comment', backref="entry", lazy=True, cascade='all, delete')
@@ -57,7 +60,10 @@ class comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
     votes = db.Column(db.Integer, default=0)
-    voters = db.relationship('User', secondary=post_likes, backref=db.backref('liked_comments', lazy='dynamic'))
+    voters = db.relationship('User', secondary=comment_likes, backref=db.backref('comment_likes', lazy='dynamic'), 
+                             primaryjoin=(comment_likes.c.comment_id == id), 
+                             secondaryjoin=(comment_likes.c.user_id == User.id)
+    )
     author = db.Column(db.Integer, nullable=False)
     author_name = db.Column(db.String(20), nullable=False) # this is a terrible solution to a problem I have but whatever
     entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'),
@@ -161,7 +167,7 @@ def viewentries():
 @login_required
 def deleteentry(id):
     entry_to_delete = entry.query.get_or_404(id)
-    if entry_to_delete.author == current_user.id:
+    if entry_to_delete.author == current_user.id or current_user.name == 'admin':
         try: #have a try statement just incase something goes wrong
             db.session.delete(entry_to_delete)
             db.session.commit()
@@ -176,7 +182,7 @@ def deleteentry(id):
 @login_required
 def deletecomment(post_id, comment_id):
     comment_to_delete = comment.query.get_or_404(comment_id)
-    if comment_to_delete.author == current_user.id:
+    if comment_to_delete.author == current_user.id or current_user.name == 'admin':
         try: #have a try statement just incase something goes wrong
             db.session.delete(comment_to_delete)
             db.session.commit()

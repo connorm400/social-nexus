@@ -16,9 +16,7 @@
     <p><b>Date created: {{ post.date_created.date() }} | <a href="/del/{{ post.id }}">Delete</a></b></p>
 
     <form action="/comment/{{ post.id }}" method="POST">
-        <textarea name="content" id="content" rows="10" cols="50" autofocus maxlength="400">
-Make a comment!
-        </textarea> 
+        <textarea name="content" id="content" rows="10" cols="50" autofocus maxlength="400" placeholder="Make a comment!"></textarea> 
         <br><br>
         <input type="submit" value="submit">
     </form>
