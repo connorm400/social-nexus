@@ -1,10 +1,14 @@
 from flask import Flask, render_template, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, logout_user, login_user, UserMixin, current_user
+from flask_bcrypt import Bcrypt
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'fe77d95461c40eaf32e34bdd8af507729f7225046312d9fcc190c3a1e2c409e6'
+
+bcrypt = Bcrypt(app)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///submissions.db'
 db = SQLAlchemy(app)
 
@@ -16,6 +20,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(20), nullable=False)
+    pw_hash = db.Column(db.String(400), nullable=False)
     
     def __repr__(self):
         return "<user %r>" %self.id
@@ -51,14 +56,15 @@ def load_user(user_id):
 def login():
     if request.method == 'POST' :
         username = request.form['username']
-        password = request.form['password']
+        candidate = request.form['password']
         
         if request.form.get('remember-me') != True:
             remember_me = False
 
         user_to_login = User.query.filter_by(name=username).first()
 
-        if user_to_login.password == password:
+        #if user_to_login.password == password:
+        if bcrypt.check_password_hash(user_to_login.pw_hash, candidate):
             login_user(user_to_login, remember=remember_me)
             return redirect('/')
         else:
@@ -78,7 +84,8 @@ def signup():
             flash ('Someone already has that username sorry')
             return redirect('/signup')
         else:
-            new_user = User(name=username, password=password)
+            pw_hash = bcrypt.generate_password_hash(password)
+            new_user = User(name=username, password=password, pw_hash=pw_hash)
             try:
                 db.session.add(new_user)
                 db.session.commit()
@@ -97,7 +104,10 @@ def logout():
     return redirect('/')
 @app.route('/')
 def index():
-    return render_template('index.html', logged_in=current_user.is_authenticated, name=current_user.name)
+    if current_user.is_authenticated:
+        return render_template('index.html', logged_in=current_user.is_authenticated, name=current_user.name)
+    else:
+        return render_template('index.html', logged_in=current_user.is_authenticated)
 
 @app.route('/dropper', methods=['POST', 'GET'])
 @login_required
