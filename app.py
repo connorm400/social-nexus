@@ -4,8 +4,10 @@ from flask_login import LoginManager, login_required, logout_user, login_user, U
 from flask_bcrypt import Bcrypt
 from datetime import datetime
 
+from secretkey import *
+
 app = Flask(__name__)
-app.secret_key = 'fe77d95461c40eaf32e34bdd8af507729f7225046312d9fcc190c3a1e2c409e6'
+app.secret_key = secretkey
 
 bcrypt = Bcrypt(app)
 
