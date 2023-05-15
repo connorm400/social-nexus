@@ -35,9 +35,15 @@ Make a comment!
         
     {% endfor %}
 </div>
-<div class="login-bar">
-    <a href="/login">Login</a> / <a href="/logout">Logout</a>
-</div>
+{% if logged_in %}
+    <div class="login-bar">
+        <a href="/logout">Logout</a>
+    </div>
+{% else %}
+    <div class="login-bar">
+        <a href="/login">Login</a> | <a href="/signup">Signup</a>
+    </div>
+{% endif %}
 <div class="messages">
     {% with messages = get_flashed_messages() %}
         {% if messages %}
