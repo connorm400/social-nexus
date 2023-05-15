@@ -5,30 +5,51 @@
 {% endblock %}
 
 {% block body %}
-<h1>Social Nexus</h1>
-<h2>Personal Forum</h2>
-
-<div class="flexbox-container">
-    <div class="flex-column">
-        <h2>Submit</h2>
-        <p>click <a href="/dropper">here</a> to make an anonymous post to the forum</p>
+<div class="index-flexbox">
+    <div class="sidebar"> 
+        <h1 class="sidebar">Social Nexus</h1>
+        <br><br><br>
+        <h2 class="sidebar">Personal forum</h2> 
+        <br><br><br><br>
+        <div class="sidebar-box">
+            <h2>Submit</h2>
+            <p>click <a href="/dropper">here</a> to make an anonymous post to the forum</p>
+        </div><br><br>
+        {% if logged_in %}
+            <div class="sidebar-box">
+                {{ name }} | <a href="/logout">Logout</a>
+            </div>
+        {% else %}
+            <div class="sidebar-box">
+                <a href="/login">Login</a> | <a href="/signup">Signup</a>
+            </div>
+        {% endif %}
     </div>
-    <div class="flex-column">
-        <h2>View</h2>
-        <p>Click <a href="/recipient">here</a> to view open posts</p>
+    <div class="main">
+        <div class="box">
+            <!--Only shows this if there arent are 0 (or less ig) entries-->
+            {% if submissions|length < 1 %}
+                <h2>There are no posts. Make one <a href="/dropper">here</a>.</h2>
+            {% endif %}
+            <!--Repeats this for each post-->
+            {% for entry in submissions %}
+                <div class="postbox">
+                    <h2>{{ entry.title }}</h2>
+                    <h3>Author: {{ entry.author_name }}</h3>
+                    <!--<h4>Date Created: {{ entry.date_created.date() }}</h4>-->
+                    <p>{{ entry.content }}</p>
+                    <img src='{{ entry.image }}' class="post-image">
+                    <br><hr>
+                    <p>likes: {{ entry.votes }} | <a href="/upvote-post/{{ entry.id }}" class="post-link">like</a></p> 
+                    <p><b><a href="/post/{{entry.id}}" class="post-link">view post</a></b></p>
+                    {% if submissions|length > 1 %} <!--Will only show a horizontal line if there are multiple posts to be divided-->
+                        
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>  
     </div>
 </div>
-
-{% if logged_in %}
-    <div class="login-bar">
-        {{ name }} | <a href="/logout">Logout</a>
-    </div>
-{% else %}
-    <div class="login-bar">
-        <a href="/login">Login</a> | <a href="/signup">Signup</a>
-    </div>
-{% endif %}
-
 <div class="messages">
     {% with messages = get_flashed_messages() %}
         {% if messages %}

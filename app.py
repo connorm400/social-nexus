@@ -128,12 +128,14 @@ def logout():
     logout_user()
     flash ("succesfully logged out")
     return redirect('/')
+
 @app.route('/')
 def index():
+    submissions = entry.query.order_by(entry.votes.desc()).all()
     if current_user.is_authenticated:
-        return render_template('index.html', logged_in=current_user.is_authenticated, name=current_user.name)
+        return render_template('index.html', logged_in=current_user.is_authenticated, name=current_user.name, submissions=submissions)
     else:
-        return render_template('index.html', logged_in=current_user.is_authenticated)
+        return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions)
 
 @app.route('/dropper', methods=['POST', 'GET'])
 @login_required
@@ -155,6 +157,7 @@ def submit():
     elif request.method == 'GET':
         return render_template('dropper.html')
 
+'''
 @app.route('/recipient')
 def viewentries():
     submissions = entry.query.order_by(entry.votes.desc()).all()
@@ -162,6 +165,7 @@ def viewentries():
         return render_template('recipient.html', submissions=submissions, logged_in=current_user.is_authenticated, name=current_user.name)
     else:
         return render_template('recipient.html', submissions=submissions, logged_in=current_user.is_authenticated)
+'''
 
 @app.route('/del/<int:id>')
 @login_required

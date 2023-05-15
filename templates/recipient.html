@@ -1,3 +1,4 @@
+<!--This page isnt being used anymore-->
 {% extends 'base.html' %}
 
 {% block head %}
@@ -20,11 +21,11 @@
             <!--<h4>Date Created: {{ entry.date_created.date() }}</h4>-->
             <p>{{ entry.content }}</p>
             <img src='{{ entry.image }}' class="post-image">
-            <br>
+            <br><hr>
             <p>likes: {{ entry.votes }} | <a href="/upvote-post/{{ entry.id }}" class="post-link">like</a></p> 
             <p><b><a href="/post/{{entry.id}}" class="post-link">view post</a></b></p>
             {% if submissions|length > 1 %} <!--Will only show a horizontal line if there are multiple posts to be divided-->
-                <hr>
+                
             {% endif %}
         </div>
     {% endfor %}
