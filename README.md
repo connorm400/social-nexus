@@ -19,3 +19,7 @@ At first this project was supposed to be like SecureDrop, but I decided to pivot
 * **/upvote-post/_id_**: Upvote post with corresponding id. requires login + current user hasnt already liked the post. redirects to post
 
 * **/upvote-comment/_post\_id_/_comment\_id_**: upvote comment with comment_id. requires login + current user hasnt already liked the comment. redirects to post
+
+* **/settings/**: settings page. Requires login
+
+* **/account-delete/**: GET is a form that needs to be filled out to delete an account. POST will delete current_user if the form submits the correct password
