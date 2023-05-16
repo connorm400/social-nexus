@@ -275,6 +275,28 @@ def delaccount():
         else: 
             flash ('Incorrect password')
             return redirect ('/settings')
+        
+@app.route('/pw-change', methods=['GET', 'POST'])
+@login_required
+def pw_change():
+    if request.method == 'GET':
+        return render_template('pw-change.html', user=current_user)
+    if request.method == 'POST':
+        pw_candidate = request.form['password']
+        new_pw = request.form['newpassword']
+        if bcrypt.check_password_hash(current_user.pw_hash, pw_candidate):
+            pw_hash = bcrypt.generate_password_hash(new_pw)
+            try:
+                current_user.pw_hash = pw_hash
+                db.session.commit()
+                flash ('password succesfully changed')
+                return redirect('/')
+            except:
+                return "didnt work"
+        else:
+            flash ('incorrect password')
+            return redirect ('/pw-change')
+        
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()

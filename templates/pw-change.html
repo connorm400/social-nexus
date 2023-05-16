@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<title>Change password</title>
+{% endblock %}
+{% block body %}
+<a href="/"><img src="{{ url_for('static', filename='images/back-arrow.png') }}" class="back"></a>
+<body class="box">
+    <h1>Change password</h1>
+    <h2>Account name: {{user.name}}</h2>
+    <hr>
+    <div class="danger-box">
+        <form action="/pw-change" method="POST" class="passwordchange">
+            <h2>Confirmation password</h2>
+            <input type="password" name="password" id="password" class="passwordchange"><br><br>
+            <h2>New password:</h2>
+            <input type="password" name="newpassword" id="newpassword" class="passwordchange"><br><br>
+            <input type="submit" value="Change password" class="passwordchange">
+        </form>
+    </div>
+</body>
+{% endblock %}
