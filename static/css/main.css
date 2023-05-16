@@ -133,10 +133,10 @@ textarea{
 }
 @keyframes fadeout {
     from {
-        visibility: visible;
+        opacity: 1;
     }
     to {
-        visibility: hidden;
+        opacity: 0;
     }
 }
 .messages {
@@ -150,7 +150,7 @@ textarea{
     right: 20px;
     background-color: rgb(236, 80, 80);
     animation-name: fadeout;
-    animation-duration: 3s;
+    animation-duration: 2s;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
 }

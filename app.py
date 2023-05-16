@@ -88,6 +88,7 @@ def login():
             user_to_login = User.query.filter_by(name=username).first()
             if bcrypt.check_password_hash(user_to_login.pw_hash, pw_candidate):
                 login_user(user_to_login, remember=remember_me)
+                flash ('succesfully logged in')
                 return redirect('/')
             else:
                 flash ('Invalid username or password.')
