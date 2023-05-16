@@ -90,10 +90,11 @@ def login():
                 login_user(user_to_login, remember=remember_me)
                 return redirect('/')
             else:
-                return 'Invalid username or password.', 'error'
+                flash ('Invalid username or password.')
+                return redirect('/login')
         except:
             flash ('user doesnt exist')
-            return redirect('/')
+            return redirect('/login')
         
     elif request.method == 'GET':
         return render_template('login.html')

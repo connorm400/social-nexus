@@ -46,24 +46,26 @@
         {% endif %}
         {% for comment in comments %}
             <hr>
-            
+            <h3>Author: {{ comment.author_name }}</h3>
             <p>{{ comment.content }}</p>
             <br>
+            
             <p>votes: {{ comment.votes }} | <a href="/upvote-comment/{{ post.id }}/{{ comment.id }}">Vote</a></p> 
             <p><a href="/del/comment/{{ post.id }}/{{comment.id}}">delete comment</a></p>
             
         {% endfor %}
     </div>
 </div>
-<div class="messages">
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="messages">
             <ul class=flashes>
             {% for message in messages %}
                 <li>{{ message }}</li>
             {% endfor %}
             </ul>
-        {% endif %}
-    {%endwith %}
-</div>
+        </div>
+    {% endif %}
+{%endwith %}
+{% endblock %}
 {% endblock %}

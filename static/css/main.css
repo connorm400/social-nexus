@@ -131,6 +131,14 @@ textarea{
     border: none;
     border-radius: 25px;
 }
+@keyframes fadeout {
+    from {
+        visibility: visible;
+    }
+    to {
+        visibility: hidden;
+    }
+}
 .messages {
     /*background-color: aliceblue;*/
     margin: 2%;
@@ -140,4 +148,8 @@ textarea{
     position: fixed;
     top: 150px;
     right: 20px;
-}
+    background-color: rgb(236, 80, 80);
+    animation-name: fadeout;
+    animation-duration: 3s;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;

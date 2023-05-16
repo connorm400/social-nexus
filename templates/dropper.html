@@ -17,15 +17,16 @@
     <input type="submit" value="submit">
 </form>
 </div>
-<div class="messages">
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="messages">
             <ul class=flashes>
             {% for message in messages %}
                 <li>{{ message }}</li>
             {% endfor %}
             </ul>
-        {% endif %}
-    {%endwith %}
-</div>
+        </div>
+    {% endif %}
+{%endwith %}
+{% endblock %}
 {% endblock %}
