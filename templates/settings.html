@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>Settings</title>
+{% endblock %}
+{% block body %}
+<a href="/"><img src="{{ url_for('static', filename='images/back-arrow.png') }}" class="back"></a>
+<body class="box">
+    <h1>Settings</h1>
+    <h2>Account name: {{user.name}}</h2>
+    <hr>
+    <div class="danger-box">
+        <h2>Danger! These options are <b>PERMANENT</b>.</h2>
+        <a href="/delete-account">delete account</a> <br>
+    </div>
+</body>
+{% endblock %}

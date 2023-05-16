@@ -159,16 +159,6 @@ def submit():
     elif request.method == 'GET':
         return render_template('dropper.html')
 
-'''
-@app.route('/recipient')
-def viewentries():
-    submissions = entry.query.order_by(entry.votes.desc()).all()
-    if current_user.is_authenticated:
-        return render_template('recipient.html', submissions=submissions, logged_in=current_user.is_authenticated, name=current_user.name)
-    else:
-        return render_template('recipient.html', submissions=submissions, logged_in=current_user.is_authenticated)
-'''
-
 @app.route('/del/<int:id>')
 @login_required
 def deleteentry(id):
@@ -260,6 +250,31 @@ def commentPage(id):
     except:
         return "issue with making comment"
 
+@app.route('/settings', methods=[ 'GET'])
+@login_required
+def settings():
+    return render_template('settings.html', user=current_user)
+
+@app.route('/delete-account', methods=['GET', 'POST'])
+@login_required
+def delaccount():
+    if request.method == 'GET':
+        return render_template('delete-account.html', user=current_user)
+    elif request.method == 'POST':
+        user_to_delete = current_user
+        pw_candidate = request.form['password']
+        if bcrypt.check_password_hash(user_to_delete.pw_hash, pw_candidate):
+            try:
+                db.session.delete(user_to_delete)
+                db.session.commit()
+                logout_user()
+                flash ('account deleted')
+                return redirect ('/')
+            except:
+                flash ('Unable to delete account')
+        else: 
+            flash ('Incorrect password')
+            return redirect ('/settings')
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()

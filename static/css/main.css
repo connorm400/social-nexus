@@ -154,3 +154,8 @@ textarea{
     animation-fill-mode: forwards;
     animation-timing-function: linear;
 }
+.danger-box {
+    background-color: rgb(236, 80, 80);
+    padding: 10%;
+    border-radius: 25px;
+}
