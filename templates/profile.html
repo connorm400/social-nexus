@@ -17,7 +17,7 @@
         </div><br><br>
         {% if logged_in %}
             <div class="sidebar-box">
-                {{ name }} | <a href="/logout">Logout</a> | <a href="/settings">Settings</a>
+                <a href="/profile/{{ current_user.id }}">{{current_user.name}}</a> | <a href="/logout">Logout</a> | <a href="/settings">Settings</a>
             </div>
         {% else %}
             <div class="sidebar-box">
@@ -28,6 +28,7 @@
     <div class="main">
         <div class="box">
             <h1>{{ user.name }}</h1>
+            <p>{{ user.bio }}</p>
             <h2>posts</h2>
             <hr><br><br>
             <!--Only shows this if there arent are 0 (or less ig) entries-->

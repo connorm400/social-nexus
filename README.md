@@ -25,3 +25,5 @@ At first this project was supposed to be like SecureDrop, but I decided to pivot
 * **/account-delete/**: GET is a form that needs to be filled out to delete an account. POST will delete current_user if the form submits the correct password
 
 * **/pw-change**: GET is a form to change password. POST is to submit the form and change password
+
+* **/profile/_user\_id_**: Profile for a user. Shows all their post and comments. 

@@ -17,7 +17,7 @@
         </div><br><br>
         {% if logged_in %}
             <div class="sidebar-box">
-                {{ name }} | <a href="/logout">Logout</a> | <a href="/settings">Settings</a>
+                <a href="/profile/{{ current_user.id }}">{{current_user.name}}</a> | <a href="/logout">Logout</a> | <a href="/settings">Settings</a>
             </div>
         {% else %}
             <div class="sidebar-box">

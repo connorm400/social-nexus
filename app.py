@@ -35,6 +35,7 @@ class User(UserMixin, db.Model):
     #password = db.Column(db.String(20), nullable=False)
     pw_hash = db.Column(db.String(400), nullable=False)
     
+    bio = db.Column(db.String(400), nullable=True)
     def __repr__(self):
         return "<user %r>" %self.id
 
@@ -136,7 +137,7 @@ def logout():
 def index():
     submissions = entry.query.order_by(entry.votes.desc()).all()
     if current_user.is_authenticated:
-        return render_template('index.html', logged_in=current_user.is_authenticated, name=current_user.name, submissions=submissions)
+        return render_template('index.html', logged_in=current_user.is_authenticated, current_user=current_user, submissions=submissions)
     else:
         return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions)
 
@@ -144,7 +145,7 @@ def index():
 def newsort():
     submissions = entry.query.order_by(entry.date_created.desc()).all()
     if current_user.is_authenticated:
-        return render_template('index.html', logged_in=current_user.is_authenticated, name=current_user.name, submissions=submissions)
+        return render_template('index.html', logged_in=current_user.is_authenticated, current_user=current_user, submissions=submissions)
     else:
         return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions)
 
@@ -239,7 +240,7 @@ def fullpagepost(id):
     
     specific_post = entry.query.get_or_404(id)
     if current_user.is_authenticated:
-        return render_template('post.html', post=specific_post, comments=comments, logged_in=current_user.is_authenticated, name=current_user.name)
+        return render_template('post.html', post=specific_post, comments=comments, logged_in=current_user.is_authenticated, current_user=current_user)
     else:
         return render_template('post.html', post=specific_post, comments=comments, logged_in=current_user.is_authenticated)
     
@@ -264,9 +265,9 @@ def profile(user_id):
     user = User.query.get_or_404(user_id)
     posts = entry.query.filter_by(author=user_id).all()
     comments = comment.query.filter_by(author=user_id).all()
-    
+
     if current_user.is_authenticated:
-        return render_template('profile.html', logged_in=current_user.is_authenticated, name=current_user.name, posts=posts, user=user, comments=comments)
+        return render_template('profile.html', logged_in=current_user.is_authenticated, current_user=current_user, posts=posts, user=user, comments=comments)
     else:
         return render_template('profile.html', logged_in=current_user.is_authenticated, posts=posts, user=user, comments=comments)
 
@@ -276,6 +277,19 @@ def profile(user_id):
 def settings():
     return render_template('settings.html', user=current_user)
 
+@app.route('/change-bio', methods=['POST'])
+@login_required
+def change_bio():
+    new_bio = request.form['content']
+    try:
+        current_user.bio = new_bio
+        db.session.commit()
+        flash ('bio succesfully changed')
+        return redirect('/settings')
+    except:
+        flash ('issue with changing account bio')
+        return redirect('/settings')
+    
 @app.route('/delete-account', methods=['GET', 'POST'])
 @login_required
 def delaccount():
