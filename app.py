@@ -275,7 +275,7 @@ def profile(user_id):
 @app.route('/settings', methods=[ 'GET'])
 @login_required
 def settings():
-    return render_template('settings.html', user=current_user)
+    return render_template('settings/settings.html', user=current_user)
 
 @app.route('/change-bio', methods=['POST'])
 @login_required
@@ -294,7 +294,7 @@ def change_bio():
 @login_required
 def delaccount():
     if request.method == 'GET':
-        return render_template('delete-account.html', user=current_user)
+        return render_template('settings/delete-account.html', user=current_user)
     elif request.method == 'POST':
         user_to_delete = current_user
         pw_candidate = request.form['password']
@@ -325,7 +325,7 @@ def delaccount():
 @login_required
 def pw_change():
     if request.method == 'GET':
-        return render_template('pw-change.html', user=current_user)
+        return render_template('settings/pw-change.html', user=current_user)
     if request.method == 'POST':
         pw_candidate = request.form['password']
         new_pw = request.form['newpassword']
