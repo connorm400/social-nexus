@@ -265,7 +265,17 @@ def delaccount():
         user_to_delete = current_user
         pw_candidate = request.form['password']
         if bcrypt.check_password_hash(user_to_delete.pw_hash, pw_candidate):
+            
+            # find posts made by the user to delete to replace author name with 'deleted user'
+            posts = entry.query.filter_by(author=user_to_delete.id).all()
+            comments = comment.query.filter_by(author=user_to_delete.id).all()
             try:
+                #comments = comment.query.filter_by(entry_id=id).order_by(comment.votes.desc()).all()
+                for post in posts:
+                    post.author_name = 'deleted user'
+                for Comment in comments:
+                    Comment.author_name = 'deleted user'
+                
                 db.session.delete(user_to_delete)
                 db.session.commit()
                 logout_user()
