@@ -258,6 +258,18 @@ def commentPage(id):
         return redirect('/post/%r' %id)
     except:
         return "issue with making comment"
+    
+@app.route('/profile/<int:user_id>')
+def profile(user_id):
+    user = User.query.get_or_404(user_id)
+    posts = entry.query.filter_by(author=user_id).all()
+    comments = comment.query.filter_by(author=user_id).all()
+    
+    if current_user.is_authenticated:
+        return render_template('profile.html', logged_in=current_user.is_authenticated, name=current_user.name, posts=posts, user=user, comments=comments)
+    else:
+        return render_template('profile.html', logged_in=current_user.is_authenticated, posts=posts, user=user, comments=comments)
+
 
 @app.route('/settings', methods=[ 'GET'])
 @login_required

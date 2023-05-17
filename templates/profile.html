@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
 {% block head %}
-<title>Social Nexus</title>
+<title>{{ user.name }} Social Nexus</title>
 {% endblock %}
-
 {% block body %}
+<a href="/"><img src="{{ url_for('static', filename='images/back-arrow.png') }}" class="back"></a>
 <div class="index-flexbox">
     <div class="sidebar"> 
         <h1 class="sidebar">Social Nexus</h1>
@@ -27,18 +27,33 @@
     </div>
     <div class="main">
         <div class="box">
+            <h1>{{ user.name }}</h1>
+            <h2>posts</h2>
+            <hr><br><br>
             <!--Only shows this if there arent are 0 (or less ig) entries-->
-            {% if submissions|length < 1 %}
-                <h2>There are no posts. Make one <a href="/dropper">here</a>.</h2>
-            {% else %}
-                <p>Sort by: <a href="/">popular</a> | <a href='/new'>new</a></p>
+            {% if posts|length < 1 %}
+                <h2>{{ user.name }} hasn't made any posts yet</h2>
             {% endif %}
             <!--Repeats this for each post-->
-            {% for entry in submissions %}
+            {% for entry in posts %}
                 <div class="postbox">
                     <h2>{{ entry.title }}</h2>
-                    <h3>Author: {{ entry.author_name }}</h3>
-                    <!--<h4>Date Created: {{ entry.date_created.date() }}</h4>-->
+                    <p>{{ entry.content }}</p>
+                    <img src='{{ entry.image }}' class="post-image">
+                    <br><hr>
+                    <p>likes: {{ entry.votes }} | <a href="/upvote-post/{{ entry.id }}" class="post-link">like</a></p> 
+                    <p><b><a href="/post/{{entry.id}}" class="post-link">view post</a></b></p>
+                </div>
+            {% endfor %}
+            <h2>comments</h2>
+            <hr><br><br>
+            <!--Only shows this if there arent are 0 (or less ig) entries-->
+            {% if comments|length < 1 %}
+                <h2>{{ user.name }} hasn't made any comments yet</h2>
+            {% endif %}
+            <!--Repeats this for each post-->
+            {% for entry in comments %}
+                <div class="postbox">
                     <p>{{ entry.content }}</p>
                     <img src='{{ entry.image }}' class="post-image">
                     <br><hr>
