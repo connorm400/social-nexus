@@ -37,7 +37,7 @@
             {% for entry in submissions %}
                 <div class="postbox">
                     <h2>{{ entry.title }}</h2>
-                    <h3>Author: {{ entry.author_name }}</h3>
+                    <h3>Author: <a href="/profile/{{entry.author}}">{{ entry.author_name }}</a></h3>
                     <!--<h4>Date Created: {{ entry.date_created.date() }}</h4>-->
                     <p>{{ entry.content }}</p>
                     <img src='{{ entry.image }}' class="post-image">

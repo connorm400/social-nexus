@@ -7,7 +7,7 @@
 {% block body %}
 <a href="/"><img src="{{ url_for('static', filename='images/back-arrow.png') }}" class="back"></a>
 <h1>{{ post.title }}</h1>
-<h2>Author: {{ post.author_name }}</h2>
+<h2>Author: <a href="/profile/{{ post.author }}">{{ post.author_name }}</a></h2>
 <div class="index-flexbox">
     <div class="sidebar"> 
         <h1 class="sidebar">Social Nexus</h1>
@@ -46,7 +46,7 @@
         {% endif %}
         {% for comment in comments %}
             <hr>
-            <h3>Author: {{ comment.author_name }}</h3>
+            <h3>Author: <a href="/profile/{{ comment.author }}">{{ comment.author_name }}</a></h3>
             <p>{{ comment.content }}</p>
             <br>
             

@@ -32,7 +32,7 @@
             <hr><br><br>
             <!--Only shows this if there arent are 0 (or less ig) entries-->
             {% if posts|length < 1 %}
-                <h2>{{ user.name }} hasn't made any posts yet</h2>
+                <h2>{{ user.name }} hasn't made any posts yet</h2><br><br>
             {% endif %}
             <!--Repeats this for each post-->
             {% for entry in posts %}
