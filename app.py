@@ -140,6 +140,14 @@ def index():
     else:
         return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions)
 
+@app.route('/new')
+def newsort():
+    submissions = entry.query.order_by(entry.date_created.desc()).all()
+    if current_user.is_authenticated:
+        return render_template('index.html', logged_in=current_user.is_authenticated, name=current_user.name, submissions=submissions)
+    else:
+        return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions)
+
 @app.route('/dropper', methods=['POST', 'GET'])
 @login_required
 def submit():
