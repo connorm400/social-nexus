@@ -25,4 +25,3 @@ At first this project was supposed to be like SecureDrop, but I decided to pivot
 * **/account-delete/**: GET is a form that needs to be filled out to delete an account. POST will delete current_user if the form submits the correct password
 
 * **/pw-change**: GET is a form to change password. POST is to submit the form and change password
-    * **ISSUE**: Currently the authors ID gets changed with each password update. That means you cant delete post made before changing your password
