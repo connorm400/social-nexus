@@ -306,11 +306,14 @@ def delaccount():
             try:
                 #comments = comment.query.filter_by(entry_id=id).order_by(comment.votes.desc()).all()
                 for post in posts:
-                    post.author_name = 'deleted user'
+                    post.author_name = '[deleted user]'
                 for Comment in comments:
-                    Comment.author_name = 'deleted user'
+                    Comment.author_name = '[deleted user]'
                 
-                db.session.delete(user_to_delete)
+                #db.session.delete(user_to_delete) #you cant just delete the user otherwise the id for the other users will be messed up
+                user_to_delete.name = 'deleted'
+                user_to_delete.bio = 'this user has been deleted'
+                user_to_delete.pw_hash = '0'
                 db.session.commit()
                 logout_user()
                 flash ('account deleted')
