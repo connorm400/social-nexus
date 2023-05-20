@@ -27,44 +27,48 @@
     </div>
     <div class="main">
         <div class="box">
-            <h1>{{ user.name }}</h1>
-            {% if user.bio is not none %}
-                <p>{{ user.bio }}</p>
+            {% if user.deleted %}
+                <h1>This user has been deleted</h1>
+            {% else %}
+                <h1>{{ user.name }}</h1>
+                {% if user.bio is not none %}
+                    <p>{{ user.bio }}</p>
+                {% endif %}
+                <h2>posts</h2>
+                <hr><br><br>
+                <!--Only shows this if there arent are 0 (or less ig) entries-->
+                {% if posts|length < 1 %}
+                    <h2>{{ user.name }} hasn't made any posts yet</h2><br><br>
+                {% endif %}
+                <!--Repeats this for each post-->
+                {% for entry in posts %}
+                    <div class="postbox">
+                        <h2>{{ entry.title }}</h2>
+                        <p>{{ entry.content }}</p>
+                        <img src='{{ entry.image }}' class="post-image">
+                        <br><hr>
+                        <p>likes: {{ entry.votes }} | <a href="/upvote-post/{{ entry.id }}" class="post-link">like</a></p> 
+                        <p><b><a href="/post/{{entry.id}}" class="post-link">view post</a></b></p>
+                    </div>
+                {% endfor %}
+                <h2>comments</h2>
+                <hr><br><br>
+                <!--Only shows this if there arent are 0 (or less ig) entries-->
+                {% if comments|length < 1 %}
+                    <h2>{{ user.name }} hasn't made any comments yet</h2>
+                {% endif %}
+                <!--Repeats this for each post-->
+                {% for entry in comments %}
+                    <div class="postbox">
+                        <p>{{ entry.content }}</p>
+                        <img src='{{ entry.image }}' class="post-image">
+                        <br><hr>
+                        <p>likes: {{ entry.votes }} | <a href="/upvote-post/{{ entry.id }}" class="post-link">like</a></p> 
+                        <p><b><a href="/post/{{entry.id}}" class="post-link">view post</a></b></p>
+                    </div>
+                {% endfor %}
             {% endif %}
-            <h2>posts</h2>
-            <hr><br><br>
-            <!--Only shows this if there arent are 0 (or less ig) entries-->
-            {% if posts|length < 1 %}
-                <h2>{{ user.name }} hasn't made any posts yet</h2><br><br>
-            {% endif %}
-            <!--Repeats this for each post-->
-            {% for entry in posts %}
-                <div class="postbox">
-                    <h2>{{ entry.title }}</h2>
-                    <p>{{ entry.content }}</p>
-                    <img src='{{ entry.image }}' class="post-image">
-                    <br><hr>
-                    <p>likes: {{ entry.votes }} | <a href="/upvote-post/{{ entry.id }}" class="post-link">like</a></p> 
-                    <p><b><a href="/post/{{entry.id}}" class="post-link">view post</a></b></p>
-                </div>
-            {% endfor %}
-            <h2>comments</h2>
-            <hr><br><br>
-            <!--Only shows this if there arent are 0 (or less ig) entries-->
-            {% if comments|length < 1 %}
-                <h2>{{ user.name }} hasn't made any comments yet</h2>
-            {% endif %}
-            <!--Repeats this for each post-->
-            {% for entry in comments %}
-                <div class="postbox">
-                    <p>{{ entry.content }}</p>
-                    <img src='{{ entry.image }}' class="post-image">
-                    <br><hr>
-                    <p>likes: {{ entry.votes }} | <a href="/upvote-post/{{ entry.id }}" class="post-link">like</a></p> 
-                    <p><b><a href="/post/{{entry.id}}" class="post-link">view post</a></b></p>
-                </div>
-            {% endfor %}
-        </div>  
+            </div>  
     </div>
 </div>
 {% endblock %}

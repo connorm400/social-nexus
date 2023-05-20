@@ -34,7 +34,7 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(20), nullable=False)
     #password = db.Column(db.String(20), nullable=False)
     pw_hash = db.Column(db.String(400), nullable=False)
-    
+    deleted = db.Column(db.Boolean, nullable=False)
     bio = db.Column(db.String(400), nullable=True)
     def __repr__(self):
         return "<user %r>" %self.id
@@ -114,7 +114,7 @@ def signup():
             return redirect('/signup')
         else:
             pw_hash = bcrypt.generate_password_hash(password)
-            new_user = User(name=username, pw_hash=pw_hash)
+            new_user = User(name=username, pw_hash=pw_hash, deleted=False)
             try:
                 db.session.add(new_user)
                 db.session.commit()
@@ -314,6 +314,7 @@ def delaccount():
                 user_to_delete.name = 'deleted'
                 user_to_delete.bio = 'this user has been deleted'
                 user_to_delete.pw_hash = '0'
+                user_to_delete.deleted = True
                 db.session.commit()
                 logout_user()
                 flash ('account deleted')
