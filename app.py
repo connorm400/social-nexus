@@ -307,8 +307,10 @@ def delaccount():
                 #comments = comment.query.filter_by(entry_id=id).order_by(comment.votes.desc()).all()
                 for post in posts:
                     post.author_name = '[deleted user]'
+                    post.content = 'author of this post has been deleted'
                 for Comment in comments:
                     Comment.author_name = '[deleted user]'
+                    Comment.content = 'author of this post has been deleted'
                 
                 #db.session.delete(user_to_delete) #you cant just delete the user otherwise the id for the other users will be messed up
                 user_to_delete.name = 'deleted'
