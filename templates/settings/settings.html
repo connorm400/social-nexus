@@ -10,14 +10,21 @@
     <hr>
     <br>
     <h3>Bio</h3>
-    <form action="/change-bio" method="POST" class="bio">
-        <textarea name="content" id="content" rows="10" cols="50" maxlength="400" placeholder="This is your bio. You can see it on your profile"></textarea> <br><br>
-        <input type="submit" value="change bio" class="bio">
-    </form><br><br>
+    {%  if user.bio is not none  %}
+        <form action="/change-bio" method="POST" class="bio">
+            <textarea name="content" id="content" rows="10" cols="50" maxlength="400" placeholder="{{ user.bio }}"></textarea> <br><br>
+            <input type="submit" value="change bio" class="bio">
+        </form><br><br>
+    {% else %}
+        <form action="/change-bio" method="POST" class="bio">
+            <textarea name="content" id="content" rows="10" cols="50" maxlength="400" placeholder="This is your bio. You can see it on your profile"></textarea> <br><br>
+            <input type="submit" value="change bio" class="bio">
+        </form><br><br>
+    {% endif %}
     <a href="/pw-change">Change Password</a>
     <br><br>
     <div class="danger-box">
-        <h2>Danger! These options are <b>PERMANENT</b>.</h2>
+        <h2>Danger! This option is <b>PERMANENT</b>.</h2>
         <a href="/delete-account">delete account</a> <br>
     </div>
 </body>
