@@ -30,7 +30,7 @@
             {% if user.deleted %}
                 <h1>This user has been deleted</h1>
             {% else %}
-                <h1>{{ user.name }}</h1>
+                <h1 class="author-{{ user.name }}">{{ user.name }}</h1>
                 {% if user.bio is not none %}
                     <p>{{ user.bio }}</p>
                 {% endif %}

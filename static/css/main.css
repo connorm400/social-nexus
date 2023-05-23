@@ -50,6 +50,9 @@ h2.sidebar {
     width: 60%;
     height: auto;
 }
+.author-admin {
+    color: rgb(19, 197, 19);
+}
 img.back {
     position: fixed;
     width: 70px;

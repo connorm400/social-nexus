@@ -11,7 +11,7 @@ app.secret_key = secretkey
 
 bcrypt = Bcrypt(app)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///submissions.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///forum.db'
 db = SQLAlchemy(app)
 
 login_manager = LoginManager()

@@ -29,7 +29,7 @@
     </div>
     <div class="box">
         <h1>{{ post.title }}</h1>
-        <h2>Author: <a href="/profile/{{ post.author }}">{{ post.author_name }}</a></h2>
+        <h2>Author: <a href="/profile/{{ post.author }}" class="author-{{ post.author_name }}">{{ post.author_name }}</a></h2>
         <p>{{ post.content }}</p>
         <br>
         <img src='{{ post.image }}' class="post-image">
@@ -47,7 +47,7 @@
         {% endif %}
         {% for comment in comments %}
             <hr>
-            <h3>Author: <a href="/profile/{{ comment.author }}">{{ comment.author_name }}</a></h3>
+            <h3>Author: <a href="/profile/{{ comment.author }}" class="author-{{ comment.author_name }}">{{ comment.author_name }}</a></h3>
             <p>{{ comment.content }}</p>
             <br>
             
