@@ -41,7 +41,7 @@ $ pipenv install --dev
 $ pipenv shell
 ```
 
-and set up your secret key:
+and set up your secret key (in sh):
 ```
 $ touch secretkey.py
 $ secretkey=$(python -c 'import secrets; print(secrets.token_hex())')
