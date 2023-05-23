@@ -34,7 +34,7 @@ I use pipenv for virtual environment / pip packages installation.
 
 [Download pipenv](https://pypi.org/project/pipenv/#installation)
 
-And then run pipenv install in this repo's directory and open the env shell:
+run pipenv install in this repo's directory and open the env shell:
 
 ```
 $ pipenv install --dev
