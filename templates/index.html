@@ -7,7 +7,7 @@
 {% block body %}
 <div class="index-flexbox">
     <div class="sidebar"> 
-        <h1 class="sidebar">Social Nexus</h1>
+        <a href="/"><h1 class="sidebar">Social Nexus</h1></a>
         <br><br><br>
         <h2 class="sidebar">Personal forum</h2> 
         <br><br><br><br>
@@ -24,12 +24,20 @@
                 <a href="/login">Login</a> | <a href="/signup">Signup</a>
             </div>
         {% endif %}
+        <div class="tags"> <!-- all of the tags on the homepage are hard coded-->
+            <a href="/tag/help" class="tag-help"><h3 class="tag-help">help</h3></a><br>
+            <a href="/tag/question" class="tag-question"><h3 class="tag-question">question</h3></a><br>
+            <a href="/tag/announcement" class="tag-announcement"><h3 class="tag-announcement">announcement</h3></a><br>
+            <a href="/tag/other" class="tag-other"><h3 class="tag-other">other</h3></a>
+        </div>
     </div>
     <div class="main">
         <div class="box">
             <!--Only shows this if there arent are 0 (or less ig) entries-->
             {% if submissions|length < 1 %}
                 <h2>There are no posts. Make one <a href="/dropper">here</a>.</h2>
+            {% elif tagpage is true %}
+                <p>Sort by: <a href="/tag/{{ currenttag }}">popular</a> | <a href='/tag/{{ currenttag }}/new'>new</a></p>
             {% else %}
                 <p>Sort by: <a href="/">popular</a> | <a href='/new'>new</a></p>
             {% endif %}
@@ -37,7 +45,7 @@
             {% for entry in submissions %}
                 <div class="postbox">
                     <h2>{{ entry.title }}</h2>
-                    <h3 class="tag-{{ entry.tag }}">{{ entry.tag }}</h3>
+                    <a href="/tag/{{entry.tag}}" class="tag-{{ entry.tag }}"><h3 class="tag-{{ entry.tag }}">{{ entry.tag }}</h3></a>
                     <h3>Author: <a href="/profile/{{entry.author}}" class="author-{{ entry.author_name }}" >{{ entry.author_name }}</a></h3>
                     <!--<h4>Date Created: {{ entry.date_created.date() }}</h4>-->
                     <p>{{ entry.content }}</p>

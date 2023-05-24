@@ -138,17 +138,34 @@ def logout():
 def index():
     submissions = entry.query.order_by(entry.votes.desc()).all()
     if current_user.is_authenticated:
-        return render_template('index.html', logged_in=current_user.is_authenticated, current_user=current_user, submissions=submissions)
+        return render_template('index.html', logged_in=current_user.is_authenticated, current_user=current_user, submissions=submissions,tagpage=False)
     else:
-        return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions)
+        return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions,tagpage=False)
 
 @app.route('/new')
 def newsort():
     submissions = entry.query.order_by(entry.date_created.desc()).all()
     if current_user.is_authenticated:
-        return render_template('index.html', logged_in=current_user.is_authenticated, current_user=current_user, submissions=submissions)
+        return render_template('index.html', logged_in=current_user.is_authenticated, current_user=current_user, submissions=submissions, tagpage=False)
     else:
-        return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions)
+        return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions,tagpage=False)
+
+@app.route('/tag/<string:tag>')
+def tagsearch(tag):
+    submissions = entry.query.filter_by(tag=tag).order_by(entry.votes.desc()).all()
+    if current_user.is_authenticated:
+        return render_template('index.html', logged_in=current_user.is_authenticated, current_user=current_user, submissions=submissions, tagpage=True, currenttag=tag)
+    else:
+        return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions, tagpage=True, currenttag=tag)
+    
+@app.route('/tag/<string:tag>/new')
+def tagsearchnew(tag):
+    submissions = entry.query.filter_by(tag=tag).order_by(entry.date_created.desc()).all()
+    if current_user.is_authenticated:
+        return render_template('index.html', logged_in=current_user.is_authenticated, current_user=current_user, submissions=submissions, tagpage=True, currenttag=tag)
+    else:
+        return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions, tagpage=True, currenttag=tag)
+    
 
 @app.route('/dropper', methods=['POST', 'GET'])
 @login_required
