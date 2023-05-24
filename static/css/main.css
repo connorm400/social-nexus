@@ -140,7 +140,7 @@ select {
     border-radius: 25px;
     color:white;
 }
-h3.tag-help {
+.tag-help {
     background-color: antiquewhite;
     color: rgb(56, 54, 54);
     box-sizing: border-box;
@@ -148,7 +148,7 @@ h3.tag-help {
     width: 80px;
     margin: auto;
 }
-h3.tag-announcement {
+.tag-announcement {
     background-color: rgb(74, 235, 208);
     color: rgb(56, 54, 54);
     box-sizing: border-box;
@@ -156,7 +156,7 @@ h3.tag-announcement {
     width: 180px;
     margin: auto;
 }
-h3.tag-question {
+.tag-question {
     background-color: rgb(123, 131, 243);
     color: rgb(56, 54, 54);
     box-sizing: border-box;
@@ -164,7 +164,7 @@ h3.tag-question {
     width: 120px;
     margin: auto;
 }
-h3.tag-other {
+.tag-other {
     background-color: rgb(231, 96, 202);
     color: rgb(56, 54, 54);
     box-sizing: border-box;

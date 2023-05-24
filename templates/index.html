@@ -38,6 +38,8 @@
                 <h2>There are no posts. Make one <a href="/dropper">here</a>.</h2>
             {% elif tagpage is true %}
                 <p>Sort by: <a href="/tag/{{ currenttag }}">popular</a> | <a href='/tag/{{ currenttag }}/new'>new</a></p>
+                <h2 class="tag-{{ currenttag }}">{{ currenttag }}</h2>
+                <br>
             {% else %}
                 <p>Sort by: <a href="/">popular</a> | <a href='/new'>new</a></p>
             {% endif %}
