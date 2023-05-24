@@ -6,6 +6,8 @@ At first this project was supposed to be like SecureDrop, but I decided to pivot
 
 * **/**: the index. Show posts and has a link to **/dropper**
 
+* **/new** : The index but posts are sorted by date_created().desc()
+
 * **/dropper**: Where to submit posts
 
 * **/post/_id_**: fullpage post. Shows comments and more options and such
@@ -27,6 +29,10 @@ At first this project was supposed to be like SecureDrop, but I decided to pivot
 * **/pw-change**: GET is a form to change password. POST is to submit the form and change password
 
 * **/profile/_user\_id_**: Profile for a user. Shows all their post and comments. 
+
+* **/tag/_tag\_name_**: Index but only shows post with specific tag
+
+* **/tag/_tag\_name_/new**: same as regular **/tag/** but sorted by date created
 
 ### Setup
 
