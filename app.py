@@ -137,35 +137,30 @@ def logout():
 @app.route('/')
 def index():
     submissions = entry.query.order_by(entry.votes.desc()).all()
-    if current_user.is_authenticated:
-        return render_template('index.html', logged_in=current_user.is_authenticated, current_user=current_user, submissions=submissions,tagpage=False)
-    else:
-        return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions,tagpage=False)
-
+    return render_template(
+        'index.html', current_user=current_user, submissions=submissions,tagpage=False
+        )
+    
 @app.route('/new')
 def newsort():
     submissions = entry.query.order_by(entry.date_created.desc()).all()
-    if current_user.is_authenticated:
-        return render_template('index.html', logged_in=current_user.is_authenticated, current_user=current_user, submissions=submissions, tagpage=False)
-    else:
-        return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions,tagpage=False)
+    return render_template(
+        'index.html', current_user=current_user, submissions=submissions, tagpage=False
+        )
 
 @app.route('/tag/<string:tag>')
 def tagsearch(tag):
     submissions = entry.query.filter_by(tag=tag).order_by(entry.votes.desc()).all()
-    if current_user.is_authenticated:
-        return render_template('index.html', logged_in=current_user.is_authenticated, current_user=current_user, submissions=submissions, tagpage=True, currenttag=tag)
-    else:
-        return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions, tagpage=True, currenttag=tag)
+    return render_template(
+        'index.html', current_user=current_user, submissions=submissions, tagpage=True, currenttag=tag
+        )
     
 @app.route('/tag/<string:tag>/new')
 def tagsearchnew(tag):
     submissions = entry.query.filter_by(tag=tag).order_by(entry.date_created.desc()).all()
-    if current_user.is_authenticated:
-        return render_template('index.html', logged_in=current_user.is_authenticated, current_user=current_user, submissions=submissions, tagpage=True, currenttag=tag)
-    else:
-        return render_template('index.html', logged_in=current_user.is_authenticated, submissions=submissions, tagpage=True, currenttag=tag)
-    
+    return render_template(
+        'index.html', current_user=current_user, submissions=submissions, tagpage=True, currenttag=tag
+        )
 
 @app.route('/dropper', methods=['POST', 'GET'])
 @login_required
@@ -258,11 +253,9 @@ def fullpagepost(id):
     comments = comment.query.filter_by(entry_id=id).order_by(comment.votes.desc()).all()
     
     specific_post = entry.query.get_or_404(id)
-    if current_user.is_authenticated:
-        return render_template('post.html', post=specific_post, comments=comments, logged_in=current_user.is_authenticated, current_user=current_user)
-    else:
-        return render_template('post.html', post=specific_post, comments=comments, logged_in=current_user.is_authenticated)
-    
+    return render_template(
+        'post.html', post=specific_post, comments=comments, current_user=current_user
+        )
     
 @app.route('/comment/<int:id>', methods=['POST'])
 @login_required
@@ -285,16 +278,17 @@ def profile(user_id):
     posts = entry.query.filter_by(author=user_id).all()
     comments = comment.query.filter_by(author=user_id).all()
 
-    if current_user.is_authenticated:
-        return render_template('profile.html', logged_in=current_user.is_authenticated, current_user=current_user, posts=posts, user=user, comments=comments)
-    else:
-        return render_template('profile.html', logged_in=current_user.is_authenticated, posts=posts, user=user, comments=comments)
+    return render_template(
+        'profile.html', current_user=current_user, posts=posts, user=user, comments=comments
+        )
 
 
 @app.route('/settings', methods=[ 'GET'])
 @login_required
 def settings():
-    return render_template('settings/settings.html', user=current_user)
+    return render_template(
+        'settings/settings.html', user=current_user
+        )
 
 @app.route('/change-bio', methods=['POST'])
 @login_required
@@ -313,7 +307,9 @@ def change_bio():
 @login_required
 def delaccount():
     if request.method == 'GET':
-        return render_template('settings/delete-account.html', user=current_user)
+        return render_template(
+            'settings/delete-account.html', user=current_user
+            )
     elif request.method == 'POST':
         user_to_delete = current_user
         pw_candidate = request.form['password']
@@ -350,7 +346,9 @@ def delaccount():
 @login_required
 def pw_change():
     if request.method == 'GET':
-        return render_template('settings/pw-change.html', user=current_user)
+        return render_template(
+            'settings/pw-change.html', user=current_user
+            )
     if request.method == 'POST':
         pw_candidate = request.form['password']
         new_pw = request.form['newpassword']

@@ -15,7 +15,7 @@
             <h2>Submit</h2>
             <p>click <a href="/dropper">here</a> to make a post to the forum</p>
         </div><br><br>
-        {% if logged_in %}
+        {% if current_user.is_authenticated %}
             <div class="sidebar-box">
                 <a href="/profile/{{ current_user.id }}">{{current_user.name}}</a> | <a href="/logout">Logout</a> | <a href="/settings">Settings</a>
             </div>
