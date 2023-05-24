@@ -44,6 +44,7 @@
                 {% for entry in posts %}
                     <div class="postbox">
                         <h2>{{ entry.title }}</h2>
+                        <a href="/tag/{{entry.tag}}" class="tag-{{ entry.tag }}"><h3 class="tag-{{ entry.tag }}">{{ entry.tag }}</h3></a>
                         <p>{{ entry.content }}</p>
                         <img src='{{ entry.image }}' class="post-image">
                         <br><hr>
