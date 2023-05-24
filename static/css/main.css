@@ -125,6 +125,46 @@ input[type=submit]{
     border-radius:25px;
     color: white;
 }
+select {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: rgb(54,57,62);
+    border: none;
+    border-radius: 25px;
+    color:white;
+}
+h3.tag-help {
+    background-color: antiquewhite;
+    color: rgb(56, 54, 54);
+    box-sizing: border-box;
+    border-radius: 25px;
+    width: 80px;
+    margin: auto;
+}
+h3.tag-announcement {
+    background-color: rgb(74, 235, 208);
+    color: rgb(56, 54, 54);
+    box-sizing: border-box;
+    border-radius: 25px;
+    width: 180px;
+    margin: auto;
+}
+h3.tag-question {
+    background-color: rgb(123, 131, 243);
+    color: rgb(56, 54, 54);
+    box-sizing: border-box;
+    border-radius: 25px;
+    width: 120px;
+    margin: auto;
+}
+h3.tag-other {
+    background-color: rgb(231, 96, 202);
+    color: rgb(56, 54, 54);
+    box-sizing: border-box;
+    border-radius: 25px;
+    width: 80px;
+    margin: auto;
+}
 textarea{
     width: 100%;
     padding: 12px 20px;

@@ -37,6 +37,7 @@
             {% for entry in submissions %}
                 <div class="postbox">
                     <h2>{{ entry.title }}</h2>
+                    <h3 class="tag-{{ entry.tag }}">{{ entry.tag }}</h3>
                     <h3>Author: <a href="/profile/{{entry.author}}" class="author-{{ entry.author_name }}" >{{ entry.author_name }}</a></h3>
                     <!--<h4>Date Created: {{ entry.date_created.date() }}</h4>-->
                     <p>{{ entry.content }}</p>

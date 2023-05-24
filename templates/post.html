@@ -29,6 +29,7 @@
     </div>
     <div class="box">
         <h1>{{ post.title }}</h1>
+        <h3 class="tag-{{ post.tag }}">{{ post.tag }}</h3>
         <h2>Author: <a href="/profile/{{ post.author }}" class="author-{{ post.author_name }}">{{ post.author_name }}</a></h2>
         <p>{{ post.content }}</p>
         <br>
