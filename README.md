@@ -57,3 +57,7 @@ and set up the database by running setupdb.py:
 ```
 $ python setupdb.py
 ```
+
+### Censorship
+
+There is a file called `censoredWords.py`. Its an array of all banned words on the site
