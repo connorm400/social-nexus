@@ -182,10 +182,13 @@ textarea{
     border-radius: 25px;
 }
 @keyframes fadeout {
-    from {
+    0% {
         opacity: 1;
     }
-    to {
+    50% {
+        opacity: 1;
+    }
+    100% {
         opacity: 0;
     }
 }
@@ -200,7 +203,7 @@ textarea{
     right: 20px;
     background-color: rgb(236, 80, 80);
     animation-name: fadeout;
-    animation-duration: 2s;
+    animation-duration: 4s;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
 }
