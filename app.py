@@ -5,6 +5,7 @@ from flask_bcrypt import Bcrypt
 from datetime import datetime
 
 from secretkey import *
+from censoredWords import *
 
 app = Flask(__name__)
 app.secret_key = secretkey
@@ -73,6 +74,11 @@ class comment(db.Model):
     def __repr__(self):
         return "<comment %r>" % self.id
 
+def has_censored_words(phrase):
+    for censored_word in censored_words:
+        if phrase.find(censored_word) != -1:
+            return True
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -108,6 +114,10 @@ def signup():
         username = request.form['username']
         username = username.lower()
         password = request.form['password']
+
+        if has_censored_words(username):
+            flash ('username has banned words')
+            return redirect ('/signup')
 
         # check if a user already has that name
         if User.query.filter_by(name=username).first():
@@ -172,6 +182,10 @@ def submit():
         image = request.form['image']
         author = current_user.id
         author_name = current_user.name
+        if has_censored_words(submission_content) or has_censored_words(post_title):
+            flash ('Post has banned words')
+            return redirect ('/dropper')
+
         new_submission = entry(content=submission_content, title=post_title, tag=post_tag, author=author, author_name=author_name, image=image)
 
         try: 

@@ -172,6 +172,9 @@ select {
     width: 80px;
     margin: auto;
 }
+.tag-none {
+    visibility: hidden;
+}
 textarea{
     width: 100%;
     padding: 12px 20px;
