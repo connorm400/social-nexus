@@ -177,7 +177,7 @@ def submit():
         try: 
             db.session.add(new_submission) # adding the task extracted from the form to the database and commiting to save
             db.session.commit()
-            return redirect('/') # redirecting to the index; since this would be a GET method thingy it would be served the html document
+            return redirect('/post/%r' %new_submission.id) # redirecting to the index; since this would be a GET method thingy it would be served the html document
         except: # if there is ever an error itl show this message
             return 'there was an issue making your submission'
     elif request.method == 'GET':
