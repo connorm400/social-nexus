@@ -1,3 +1,6 @@
+# CW: slurs
+
+
 censored_words = [
-    'bologna', 'pineapple', 'apple', 'orange', '1984'
+    '1984', 'MCMLXXXIV', 'nineteen eighty four', 'nigger', 'pedophile', 'faggot', 'fag', 'yellow man', 'ching chong', 'Adam Sandler'
     ]

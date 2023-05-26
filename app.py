@@ -313,6 +313,9 @@ def settings():
 @login_required
 def change_bio():
     new_bio = request.form['content']
+    if has_censored_words(new_bio):
+        flash ('bio contains banned words')
+        return redirect('/settings')
     try:
         current_user.bio = new_bio
         db.session.commit()
