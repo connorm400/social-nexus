@@ -277,6 +277,11 @@ def commentPage(id):
     comment_content = request.form['content']
     author = current_user.id
     author_name = current_user.name
+
+    if has_censored_words(comment_content):
+        flash ('Comment includes banned words')
+        return redirect('/post/%r' %id)
+
     new_comment = comment(content=comment_content, entry_id=id, author=author, author_name=author_name)
     
     try:
