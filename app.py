@@ -301,7 +301,7 @@ def profile(user_id):
         )
 
 
-@app.route('/settings', methods=[ 'GET'])
+@app.route('/settings', methods=['GET'])
 @login_required
 def settings():
     return render_template(
@@ -358,7 +358,7 @@ def delaccount():
                 flash ('account deleted')
                 return redirect ('/')
             except:
-                flash ('Unable to delete account')
+                return 'Unable to delete account'
         else: 
             flash ('Incorrect password')
             return redirect ('/settings')
