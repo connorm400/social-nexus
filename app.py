@@ -30,10 +30,9 @@ comment_likes = db.Table('comment_likes',
                          )
 
 class User(UserMixin, db.Model):   
-    __tablename__ = 'User'
+    __tablename__ = 'User' 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
-    #password = db.Column(db.String(20), nullable=False)
     pw_hash = db.Column(db.String(400), nullable=False)
     deleted = db.Column(db.Boolean, nullable=False)
     bio = db.Column(db.String(400), nullable=True)
@@ -71,12 +70,12 @@ class comment(db.Model):
     author_name = db.Column(db.String(20), nullable=False) # this is a terrible solution to a problem I have but whatever
     entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'),
         nullable=False)
-    def __repr__(self):
+    def __repr__(self): 
         return "<comment %r>" % self.id
 
 def has_censored_words(phrase):
     for censored_word in censored_words:
-        if phrase.find(censored_word) != -1:
+        if phrase.find(censored_word) != -1: # .find returns -1 if it doesn't find the phrase
             return True
 
 @login_manager.user_loader
@@ -390,4 +389,4 @@ def pw_change():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(debug=False)
