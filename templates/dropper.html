@@ -10,7 +10,7 @@
 <h1>Create Post</h1>
 
 <form action="/dropper" method="POST">
-    <input type="text" name="title" id="titleinput" placeholder="title" autocomplete="off" required><br><br>
+    <input type="text" name="title" id="titleinput" placeholder="title" autocomplete="off" maxlength="150" required><br><br>
     <textarea name="content" id="content" rows="10" cols="50" maxlength="400" placeholder="body text" autocomplete="off"></textarea> <br><br>
     <!--<h3>Tag: </h3>-->
     <select name="tag" id="tag" required>
