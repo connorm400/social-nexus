@@ -1,24 +1,35 @@
+# Import libraries - 
+# Flask is for backend, sqlalchemy is for the database, flask_login for session management / login, Bcrypt for password encryption
+
 from flask import Flask, render_template, redirect, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_required, logout_user, login_user, UserMixin, current_user
 from flask_bcrypt import Bcrypt
 from datetime import datetime
 
+# Import secretkey from secretkey.py (its supposed to be secret so you'd need to generate it yourself)
 from secretkey import *
+# custom banned words from censoredWords.py
 from censoredWords import *
 
+# Set up flask
 app = Flask(__name__)
 app.secret_key = secretkey
 
+# set up bcrypt
 bcrypt = Bcrypt(app)
 
+# Set up sqlalchemy (Edit next line to change database uri)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///forum.db'
 db = SQLAlchemy(app)
 
+# set up flask_login
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+# Set up database relationship with post likes and comment likes
+# (Every post like needs a post to like, etc)
 post_likes = db.Table('post_likes',
                          db.Column('post_id', db.Integer, db.ForeignKey('entry.id'), primary_key=True),
                          db.Column('user_id', db.Integer, db.ForeignKey('User.id'), primary_key=True)
@@ -29,36 +40,38 @@ comment_likes = db.Table('comment_likes',
                          db.Column('user_id', db.Integer, db.ForeignKey('User.id'), primary_key=True)
                          )
 
+# Configure User table 
+# (UserMixin is a flask_login module that adds methods needed for login ex: is_authenticated)
 class User(UserMixin, db.Model):   
     __tablename__ = 'User' 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
-    pw_hash = db.Column(db.String(400), nullable=False)
-    deleted = db.Column(db.Boolean, nullable=False)
-    bio = db.Column(db.String(400), nullable=True)
-    def __repr__(self):
+    pw_hash = db.Column(db.String(400), nullable=False) # Password is stored in hashed form with bcrypt
+    deleted = db.Column(db.Boolean, nullable=False) # Wether or not the user has been deleted (defaults to np)
+    bio = db.Column(db.String(400), nullable=True) # user bio (Isnt required)
+    def __repr__(self): # representation so its more convinient to work with in python shell
         return "<user %r>" %self.id
 
-class entry(db.Model):
+class entry(db.Model): # entry basically means post
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(150), nullable=False)
-    content = db.Column(db.String(400), nullable=False)
-    image = db.Column(db.String(500), nullable=True)
-    tag = db.Column(db.String(50), nullable=True)
+    title = db.Column(db.String(150), nullable=False) # title has a max of 150 characters
+    content = db.Column(db.String(400), nullable=False) # content has a max of 400 characters
+    image = db.Column(db.String(500), nullable=True) # link to an image (optional)
+    tag = db.Column(db.String(50), nullable=True) # tag with the post
     date_created = db.Column(db.DateTime, default=datetime.now)
-    votes = db.Column(db.Integer, default=0)
+    votes = db.Column(db.Integer, default=0) # voter relationship is there so that a user can only like a post once
     voters = db.relationship('User', secondary=post_likes, backref=db.backref('post_likes', lazy='dynamic'), 
                              primaryjoin=(post_likes.c.post_id == id), 
                              secondaryjoin=(post_likes.c.user_id == User.id)
     )
-    author = db.Column(db.Integer, nullable=False)
-    author_name = db.Column(db.String(20), nullable=False)
-    comments = db.relationship('comment', backref="entry", lazy=True, cascade='all, delete')
+    author = db.Column(db.Integer, nullable=False) # user ID of author
+    author_name = db.Column(db.String(20), nullable=False) # authors name to show on the post
+    comments = db.relationship('comment', backref="entry", lazy=True, cascade='all, delete') # relationship with the comments on the post
     def __repr__(self):
         return "<entry %r>" % self.id
 
 
-class comment(db.Model):
+class comment(db.Model): #all of this is basically the same to the entry table
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
     votes = db.Column(db.Integer, default=0)
@@ -67,36 +80,42 @@ class comment(db.Model):
                              secondaryjoin=(comment_likes.c.user_id == User.id)
     )
     author = db.Column(db.Integer, nullable=False)
-    author_name = db.Column(db.String(20), nullable=False) # this is a terrible solution to a problem I have but whatever
-    entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'),
+    author_name = db.Column(db.String(20), nullable=False) 
+    entry_id = db.Column(db.Integer, db.ForeignKey('entry.id'), # relationship with original post
         nullable=False)
     def __repr__(self): 
         return "<comment %r>" % self.id
 
-def has_censored_words(phrase):
+# function tht checks if phrase has any censored words
+def has_censored_words(phrase): 
     for censored_word in censored_words:
-        if phrase.find(censored_word) != -1: # .find returns -1 if it doesn't find the phrase
+        if phrase.find(censored_word) != -1: # .find() returns -1 if it doesn't find the phrase
             return True
 
+# these lines are needed for flask_login 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# first app route. GET method is a regular request that returns the webpage.
+# POST request is when the login form is submitted
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'POST' :
+        # request username and password candidate 
         username = request.form['username']
-        username = username.lower()
+        username = username.lower() # password are automatically lowercase
         pw_candidate = request.form['password']
         
+        # remember me checkbox
         if request.form.get('remember-me') != True:
             remember_me = False
-        try:
-            user_to_login = User.query.filter_by(name=username).first()
-            if bcrypt.check_password_hash(user_to_login.pw_hash, pw_candidate):
-                login_user(user_to_login, remember=remember_me)
+        try: # put into a try statement so that a flask error message doesn't show up if anything goes wrong
+            user_to_login = User.query.filter_by(name=username).first() # finds the user with the same username
+            if bcrypt.check_password_hash(user_to_login.pw_hash, pw_candidate): # checks if password hash and password candidate's hash are the same 
+                login_user(user_to_login, remember=remember_me) # actually log in user
                 flash ('succesfully logged in')
-                return redirect('/')
+                return redirect('/') # redirect to index once logged in
             else:
                 flash ('Invalid username or password.')
                 return redirect('/login')
@@ -105,25 +124,27 @@ def login():
             return redirect('/login')
         
     elif request.method == 'GET':
-        return render_template('login.html')
+        return render_template('login.html') # render ./login.html 
+                                             # render_template basically renders an html document with jinja2 
     
 @app.route('/signup', methods=['POST', 'GET'])
 def signup():
     if request.method == 'POST':
+        # extract username and new password from form
         username = request.form['username']
         username = username.lower()
         password = request.form['password']
 
         if has_censored_words(username):
             flash ('username has banned words')
-            return redirect ('/signup')
+            return redirect ('/signup') # redirect early if username has banned words
 
         # check if a user already has that name
         if User.query.filter_by(name=username).first():
             flash ('Someone already has that username sorry')
             return redirect('/signup')
         else:
-            pw_hash = bcrypt.generate_password_hash(password)
+            pw_hash = bcrypt.generate_password_hash(password) # store password in database as a password hash (encrypted)
             new_user = User(name=username, pw_hash=pw_hash, deleted=False)
             try:
                 db.session.add(new_user)
@@ -135,7 +156,7 @@ def signup():
     elif request.method == 'GET':
         return render_template('signup.html')
     
-
+# logs out current user. Requires login 
 @app.route('/logout')
 @login_required
 def logout():
@@ -143,13 +164,15 @@ def logout():
     flash ("succesfully logged out")
     return redirect('/')
 
+# render index (the page with all the posts etc)
 @app.route('/')
 def index():
-    submissions = entry.query.order_by(entry.votes.desc()).all()
+    submissions = entry.query.order_by(entry.votes.desc()).all() # sort posts by most vores
     return render_template(
         'index.html', current_user=current_user, submissions=submissions,tagpage=False
         )
     
+# same as index but posts are sorted by newest
 @app.route('/new')
 def newsort():
     submissions = entry.query.order_by(entry.date_created.desc()).all()
@@ -157,13 +180,16 @@ def newsort():
         'index.html', current_user=current_user, submissions=submissions, tagpage=False
         )
 
+# only show posts for a certain tag
+# path is like this: /tag/help
 @app.route('/tag/<string:tag>')
 def tagsearch(tag):
     submissions = entry.query.filter_by(tag=tag).order_by(entry.votes.desc()).all()
     return render_template(
         'index.html', current_user=current_user, submissions=submissions, tagpage=True, currenttag=tag
         )
-    
+
+# /tag but sorted by new
 @app.route('/tag/<string:tag>/new')
 def tagsearchnew(tag):
     submissions = entry.query.filter_by(tag=tag).order_by(entry.date_created.desc()).all()
@@ -171,11 +197,13 @@ def tagsearchnew(tag):
         'index.html', current_user=current_user, submissions=submissions, tagpage=True, currenttag=tag
         )
 
+# dropper is where posts are made. 
 @app.route('/dropper', methods=['POST', 'GET'])
 @login_required
 def submit():
     if request.method == 'POST':
-        submission_content = request.form['content'] # extracting data from the form
+        # extracting data from the form
+        submission_content = request.form['content'] 
         post_title = request.form['title']
         post_tag = request.form['tag']
         image = request.form['image']
@@ -194,8 +222,9 @@ def submit():
         except: # if there is ever an error itl show this message
             return 'there was an issue making your submission'
     elif request.method == 'GET':
-        return render_template('dropper.html')
+        return render_template('dropper.html') # render ./dropper.html
 
+# deletes post with id in app route. Must be the author or the admin to delete the post
 @app.route('/del/<int:id>')
 @login_required
 def deleteentry(id):
@@ -209,8 +238,9 @@ def deleteentry(id):
             return 'issue with deleting entry in database'
     else:
         flash ("need to be the author to delete this post")
-        return redirect('/post/%r' %id)
+        return redirect('/post/%r' %id) # redirect back to original post
 
+# deletes comment
 @app.route('/del/comment/<int:post_id>/<int:comment_id>')
 @login_required
 def deletecomment(post_id, comment_id):
@@ -226,6 +256,7 @@ def deletecomment(post_id, comment_id):
         flash ("need to be the author to delete this comment")
         return redirect('/post/%r' %post_id)
     
+# like a post. Finds post to like. Appends current_user's id to the post's voters so that you can only like a post once 
 @app.route('/upvote-post/<int:id>')
 @login_required
 def upvotepost(id):
@@ -245,6 +276,7 @@ def upvotepost(id):
     except:
         return 'issue with upvoting post'
 
+# upvote a comment
 @app.route('/upvote-comment/<int:post_id>/<int:comment_id>')
 def upvotecomment(post_id, comment_id):
 
@@ -261,6 +293,7 @@ def upvotecomment(post_id, comment_id):
         except:
             return 'issue with voting whoops'
     
+# full page post. Shows all comments and such
 @app.route('/post/<int:id>', methods=['POST', 'GET'])
 def fullpagepost(id):
     comments = comment.query.filter_by(entry_id=id).order_by(comment.votes.desc()).all()
@@ -269,7 +302,8 @@ def fullpagepost(id):
     return render_template(
         'post.html', post=specific_post, comments=comments, current_user=current_user
         )
-    
+
+# write a comment. Login required. <int:id> is for the original post id
 @app.route('/comment/<int:id>', methods=['POST'])
 @login_required
 def commentPage(id):
@@ -289,7 +323,8 @@ def commentPage(id):
         return redirect('/post/%r' %id)
     except:
         return "issue with making comment"
-    
+
+# User's page. Shows all their post and comments plus bio
 @app.route('/profile/<int:user_id>')
 def profile(user_id):
     user = User.query.get_or_404(user_id)
@@ -300,7 +335,7 @@ def profile(user_id):
         'profile.html', current_user=current_user, posts=posts, user=user, comments=comments
         )
 
-
+# settings page. only has a GET method
 @app.route('/settings', methods=['GET'])
 @login_required
 def settings():
@@ -308,6 +343,7 @@ def settings():
         'settings/settings.html', user=current_user
         )
 
+# change user bio
 @app.route('/change-bio', methods=['POST'])
 @login_required
 def change_bio():
@@ -323,7 +359,9 @@ def change_bio():
     except:
         flash ('issue with changing account bio')
         return redirect('/settings')
-    
+
+# delete account. Get method returns a form that asks for your password 
+# POST method will delete all posts and comments assuming the password is correct 
 @app.route('/delete-account', methods=['GET', 'POST'])
 @login_required
 def delaccount():
@@ -363,6 +401,8 @@ def delaccount():
             flash ('Incorrect password')
             return redirect ('/settings')
         
+# password change page. GET method is for the password change form
+# POST will change password if the form gives the right original password
 @app.route('/pw-change', methods=['GET', 'POST'])
 @login_required
 def pw_change():
@@ -386,7 +426,8 @@ def pw_change():
             flash ('incorrect password')
             return redirect ('/pw-change')
         
+# more flask settings stuff
 if __name__ == "__main__":
-    with app.app_context():
+    with app.app_context(): # look at setupdb.py
         db.create_all()
     app.run(debug=False)
