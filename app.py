@@ -262,11 +262,11 @@ def deletecomment(post_id, comment_id):
 def upvotepost(id):
     try:
         entry_to_upvote = entry.query.get_or_404(id)
-        if current_user in entry_to_upvote.voters:
+        if current_user in entry_to_upvote.voters: 
             flash ('You already liked this post')
             return redirect('/post/%r' %id)
         else:
-            entry_to_upvote.votes += 1
+            entry_to_upvote.votes += 1 # increments vote count by 1
             entry_to_upvote.voters.append(current_user)
             try:
                 db.session.commit()
@@ -378,7 +378,7 @@ def delaccount():
             posts = entry.query.filter_by(author=user_to_delete.id).all()
             comments = comment.query.filter_by(author=user_to_delete.id).all()
             try:
-                #comments = comment.query.filter_by(entry_id=id).order_by(comment.votes.desc()).all()
+                # for each post or comment replace the author with [deleted user] and content with 'author of this post has been deleted'
                 for post in posts:
                     post.author_name = '[deleted user]'
                     post.content = 'author of this post has been deleted'
@@ -386,7 +386,8 @@ def delaccount():
                     Comment.author_name = '[deleted user]'
                     Comment.content = 'author of this post has been deleted'
                 
-                #db.session.delete(user_to_delete) #you cant just delete the user otherwise the id for the other users will be messed up
+                #you cant just delete the user otherwise the id for the other users will be messed up
+                # instead I just overwrite every other column element
                 user_to_delete.name = 'deleted'
                 user_to_delete.bio = 'this user has been deleted'
                 user_to_delete.pw_hash = '0'
